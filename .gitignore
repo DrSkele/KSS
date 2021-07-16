@@ -1,0 +1,83 @@
+### Unity folders & files ###
+[Ll]ibrary/
+**/[Ll]ibrary/
+!**/[Aa]ssets/**/[Ll]ibrary
+
+[Tt]emp/
+!**/[Aa]ssets/**/[Tt]emp
+
+[Oo]bj/
+!**/[Aa]ssets/**/[Oo]bj
+
+[Ll]ogs/
+!**/[Aa]ssets/**/[Ll]ogs
+
+[Mm]emoryCaptures/
+!**/[Aa]ssets/**/[Mm]emoryCaptures/
+
+UnityGenerated/
+**/[Aa]ssets/AssetStoreTools*
+**/[Aa]ssets/StreamingAssets/crashlytics-build.properties
+
+sysinfo.txt
+crashlytics-build.properties
+
+# *.unitypackage
+
+!**/[Aa]ssets/**/*.meta
+
+# Builds #
+[Bb]uild/
+!**/[Aa]ssets/**/[Bb]uild/
+[Bb]uilds/
+!**/[Aa]ssets/**/[Bb]uilds/
+*.apk
+[Bb]uild[Ff]ile/
+
+# CWJ #
+CWJ_ProfilingLog.txt
+CWJ_ProfilingLog.txt.meta
+**/CWJ/**/*_ScriptableObject.asset
+**/CWJ/**/*_ScriptableObject.asset.meta
+!**/CWJ/**/CustomDefine_ScriptableObject.asset
+!**/CWJ/**/CustomDefine_ScriptableObject.asset.meta
+!**/CWJ/**/PsMessage_ScriptableObject.asset
+!**/CWJ/**/PsMessage_ScriptableObject.asset.meta
+
+# VR #
+#**/SteamVR/InteractionSystem/Core/Icons.meta
+#**/SteamVR/Input/Editor/Resources/Icons.meta
+
+### Visual Studio / MonoDevelop generated ###
+.gradle/
+.vs/
+**/ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.pidb.meta
+*.booproj
+*.svd
+*.pdb
+*.pdb.meta
+*.mdb
+*.mdb.meta
+*.opendb
+*.VC.db
+
+### OS ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+/Cotras_Life/WinExec
