@@ -16,5 +16,6 @@ public class DataBinderTest : MonoBehaviour
     {
         binder["Name"] = "Data Binder Example";
         binder["Sprite"] = testSprite;
+        binder["Toggle"] = false;
     }
 }

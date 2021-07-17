@@ -13,8 +13,7 @@ using UnityEditor;
 
 public class BindableObj : MonoBehaviour, IBindableObj
 {
-    public string key { get; set; }
-    public string Key;
+    public string key;
 
     private ICanvasElement component;
     private DataBindUpdater updater;
@@ -22,6 +21,11 @@ public class BindableObj : MonoBehaviour, IBindableObj
 
     [HideInInspector]
     public int index;
+
+    public string GetKey()
+    {
+        return key;
+    }
     public void UpdateDataBinding(DataBinder binder)
     {
         component ??= GetComponents<ICanvasElement>()[index];
@@ -37,6 +41,11 @@ public class BindableObj : MonoBehaviour, IBindableObj
             case Image img:
                 {
                     updater = UpdateImageBinding;
+                }
+                break;
+            case Toggle toggle:
+                {
+                    updater = UpdateToggleBinding;
                 }
                 break;
         }
@@ -101,6 +110,29 @@ public class BindableObj : MonoBehaviour, IBindableObj
             Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
         }
     }
+
+    private void UpdateToggleBinding(DataBinder binder)
+    {
+        if (component is null)
+        {
+            Debug.LogError($"Wrong component settings on object {this.name}.");
+            return;
+        }
+
+        var toggle = component as Toggle;
+
+        if(binder.ContainsKey(key))
+        {
+            if (binder[key] is bool)
+                toggle.isOn = (bool)binder[key];
+            else
+                Debug.LogError($"Value for \"{key}\" does not contain boolean value");
+        }
+        else
+        {
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+        }
+    }
 }
 
 #if UNITY_EDITOR
@@ -113,7 +145,6 @@ public class BindableObjEditor: Editor
     private void OnEnable()
     {
         obj = (BindableObj)target;
-        serKey = serializedObject.FindProperty("key");
     }
 
     public override void OnInspectorGUI()
@@ -125,7 +156,7 @@ public class BindableObjEditor: Editor
             var supportedComponents = obj.GetComponents<ICanvasElement>().Where(x => MatchTypes(x));
 
             if (supportedComponents.Where(x => x is Text || x is TMP_Text).Count() <= 0)
-                obj.Key = EditorGUILayout.TextField("Key", obj.Key);
+                obj.key = EditorGUILayout.TextField("Key", obj.key);
 
             obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
 
@@ -144,6 +175,7 @@ public class BindableObjEditor: Editor
             case Text txt:
             case TMP_Text txtPro:
             case Image img:
+            case Toggle toggle:
                 return true;
             default:
                 return false;

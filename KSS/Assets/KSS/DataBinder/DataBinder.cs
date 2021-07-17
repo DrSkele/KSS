@@ -6,14 +6,14 @@ using UnityEngine;
 
 public interface IBindableObj
 {
-    string key { get; set; }
+    string GetKey();
     void UpdateDataBinding(DataBinder binder);
 }
 
 public class DataBinder : MonoBehaviour
 {
     private Dictionary<string, object> bindedDatas = null;
-    [SerializeReference] IBindableObj[] bindables = null;
+    private IBindableObj[] bindables = null;
     public object this[string key]
     {
         get => bindedDatas[key];
@@ -52,7 +52,7 @@ public class DataBinder : MonoBehaviour
     {
         foreach (var bindable in bindables)
         {
-            if (string.IsNullOrEmpty(bindable.key) || bindable.key == key)
+            if (string.IsNullOrEmpty(bindable.GetKey()) || bindable.GetKey() == key)
                 bindable.UpdateDataBinding(this);
         }
     }
