@@ -17,5 +17,6 @@ public class DataBinderTest : MonoBehaviour
         binder["Name"] = "Data Binder Example";
         binder["Sprite"] = testSprite;
         binder["Toggle"] = false;
+        binder["Slider"] = 0.5f;
     }
 }

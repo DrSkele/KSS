@@ -13,7 +13,27 @@ using UnityEditor;
 
 public class BindableObj : MonoBehaviour, IBindableObj
 {
-    public string key;
+    public List<string> keys;
+    public string key
+    {
+        get
+        {
+            if (keys == null || keys.Count == 0)
+                return string.Empty;
+            return keys[0];
+        }
+        set
+        {
+            if (keys == null)
+                keys = new List<string>();
+            if (keys.Count == 0)
+            {
+                keys.Add(value);
+                return;
+            }
+            keys[0] = value;
+        }
+    }
 
     private ICanvasElement component;
     private DataBindUpdater updater;
@@ -46,6 +66,11 @@ public class BindableObj : MonoBehaviour, IBindableObj
             case Toggle toggle:
                 {
                     updater = UpdateToggleBinding;
+                }
+                break;
+            case Slider slider:
+                {
+                    updater = UpdateSliderBinding;
                 }
                 break;
         }
@@ -133,6 +158,29 @@ public class BindableObj : MonoBehaviour, IBindableObj
             Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
         }
     }
+
+    private void UpdateSliderBinding(DataBinder binder)
+    {
+        if(component is null)
+        {
+            Debug.LogError($"Wrong component settings on object {this.name}.");
+            return;
+        }
+
+        var slider = component as Slider;
+
+        if(binder.ContainsKey(key))
+        {
+            if (binder[key] is float)
+                slider.value = (float)binder[key];
+            else
+                Debug.LogError($"Value for \"{key}\" does not contain float value");
+        }
+        else
+        {
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+        }
+    }
 }
 
 #if UNITY_EDITOR
@@ -140,11 +188,12 @@ public class BindableObj : MonoBehaviour, IBindableObj
 public class BindableObjEditor: Editor
 {
     BindableObj obj = null;
-    SerializedProperty serKey;
+    SerializedProperty keys;
 
     private void OnEnable()
     {
         obj = (BindableObj)target;
+        keys = serializedObject.FindProperty("keys");
     }
 
     public override void OnInspectorGUI()
@@ -155,10 +204,17 @@ public class BindableObjEditor: Editor
 
             var supportedComponents = obj.GetComponents<ICanvasElement>().Where(x => MatchTypes(x));
 
-            if (supportedComponents.Where(x => x is Text || x is TMP_Text).Count() <= 0)
-                obj.key = EditorGUILayout.TextField("Key", obj.key);
-
             obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
+            
+            switch (supportedComponents.ToArray()[obj.index])
+            {
+                case Text txt:
+                case TMP_Text txtPro:
+                    break;
+                default:
+                    obj.key = EditorGUILayout.TextField("Key", obj.key);
+                    break;
+            }
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -176,6 +232,7 @@ public class BindableObjEditor: Editor
             case TMP_Text txtPro:
             case Image img:
             case Toggle toggle:
+            case Slider slider:
                 return true;
             default:
                 return false;
