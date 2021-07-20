@@ -10,7 +10,7 @@ public class DataBinderTest : MonoBehaviour
 
     private void Awake()
     {
-        binder = GetComponent<DataBinder>();
+        binder = DataBinder.Init(this.gameObject);
     }
 
     private void OnEnable()

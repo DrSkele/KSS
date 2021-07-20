@@ -37,6 +37,10 @@ public class DataBinder : MonoBehaviour
             BindChanged(key);
         }
     }
+    public static DataBinder Init(GameObject obj)
+    {
+        return obj.AddComponent<DataBinder>();
+    }
 
     public bool ContainsKey(string key)
     {
