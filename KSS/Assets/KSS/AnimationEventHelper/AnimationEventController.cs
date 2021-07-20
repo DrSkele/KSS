@@ -1,15 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using System.Linq;
-using System;
-using UnityEditor.SceneManagement;
 
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.Animations;
-#endif
 /// <summary>
 /// Attach this script to object with animator.
 /// When using other component's events (ex. Toggle.OnValueChanged, Button.OnClick, ... etc),
@@ -48,41 +38,8 @@ public class AnimationEventController : MonoBehaviour
     {
         animator.SetFloat(parameter.name, value);
     }
-}
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(AnimationEventController))]
-public class AnimationEventControllerEditor : Editor
-{
-    AnimationEventController controller = null;
-
-    private void OnEnable()
+    public void SetTrigger()
     {
-        controller = (AnimationEventController)target;
-        controller.animator = controller.GetComponent<Animator>();
-    }
-
-    public override void OnInspectorGUI()
-    {
-        EditorGUI.BeginChangeCheck();
-        {
-            serializedObject.Update();
-
-            GUIContent title = new GUIContent("Parameters");
-
-            var animatorController = controller.animator.runtimeAnimatorController as AnimatorController;
-
-            Debug.Log(animatorController.parameters.Count());
-            var parameters = animatorController.parameters;
-
-            controller.index = EditorGUILayout.Popup(title, controller.index, parameters.Select(param => param.name + $"({param.type})").ToArray());
-
-            serializedObject.ApplyModifiedProperties();
-        }
-        if (EditorGUI.EndChangeCheck())
-        {
-            EditorUtility.SetDirty(target);
-        }
+        animator.SetTrigger(parameter.name);
     }
 }
-#endif

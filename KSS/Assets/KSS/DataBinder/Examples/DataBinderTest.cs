@@ -5,6 +5,7 @@ using UnityEngine;
 public class DataBinderTest : MonoBehaviour
 {
     public Sprite testSprite;
+    public Texture testTexture;
     DataBinder binder;
 
     private void Awake()
@@ -16,7 +17,9 @@ public class DataBinderTest : MonoBehaviour
     {
         binder["Name"] = "Data Binder Example";
         binder["Sprite"] = testSprite;
+        binder["Texture"] = testTexture;
         binder["Toggle"] = false;
         binder["Slider"] = 0.5f;
+        binder["Dropdown"] = new string[] { "New", "options", "are here" };
     }
 }
