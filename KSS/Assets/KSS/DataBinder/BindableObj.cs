@@ -4,12 +4,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using System.Text.RegularExpressions;
-using System.Linq;
 using UnityEngine.EventSystems;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 
 public class BindableObj : MonoBehaviour, IBindableObj
 {
@@ -222,63 +217,3 @@ public class BindableObj : MonoBehaviour, IBindableObj
             Debug.LogError($"Value for \"{key}\" does not contain string array value");
     }
 }
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(BindableObj))]
-public class BindableObjEditor: Editor
-{
-    BindableObj obj = null;
-    SerializedProperty keys;
-
-    private void OnEnable()
-    {
-        obj = (BindableObj)target;
-        keys = serializedObject.FindProperty("keys");
-    }
-
-    public override void OnInspectorGUI()
-    {
-        EditorGUI.BeginChangeCheck();
-        {
-            serializedObject.Update();
-
-            var supportedComponents = obj.GetComponents<UIBehaviour>().Where(x => MatchTypes(x));
-
-            obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
-            
-            switch (supportedComponents.ToArray()[obj.index])
-            {
-                case Text txt:
-                case TMP_Text txtPro:
-                    break;
-                default:
-                    obj.key = EditorGUILayout.TextField("Key", obj.key);
-                    break;
-            }
-
-            serializedObject.ApplyModifiedProperties();
-        }
-        if (EditorGUI.EndChangeCheck())
-        {
-            EditorUtility.SetDirty(target);
-        }
-    }
-
-    private bool MatchTypes(UIBehaviour obj)
-    {
-        switch(obj)
-        {
-            case Text txt:
-            case TMP_Text txtPro:
-            case Image img:
-            case RawImage imgRaw:
-            case Toggle toggle:
-            case Slider slider:
-            case Dropdown dropdown:
-                return true;
-            default:
-                return false;
-        }
-    }
-}
-#endif
