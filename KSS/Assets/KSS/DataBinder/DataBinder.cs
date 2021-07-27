@@ -10,13 +10,37 @@ public interface IBindableObj
     void UpdateDataBinding(DataBinder binder);
 }
 
+public class BindedValue
+{
+    private object _obj;
+    public object obj
+    {
+        get => _obj;
+        set
+        {
+            _obj = value;
+            type = value.GetType();
+            action?.Invoke(value);
+        }
+    }
+    public Type type;
+    public Action<object> action;
+
+    public BindedValue() { }
+    public BindedValue(object obj)
+    {
+        this.obj = obj;
+        type = obj.GetType();
+    }
+}
+
 public class DataBinder : MonoBehaviour
 {
-    private Dictionary<string, object> bindedDatas = null;
+    private Dictionary<string, BindedValue> bindedDatas = null;
     private IBindableObj[] bindables = null;
     public object this[string key]
     {
-        get => bindedDatas[key];
+        get => bindedDatas[key].obj;
         set
         {
             if(bindables == null)
@@ -26,13 +50,16 @@ public class DataBinder : MonoBehaviour
 
             if (bindedDatas == null)
             {
-                bindedDatas = new Dictionary<string, object>();
+                bindedDatas = new Dictionary<string, BindedValue>();
             }
 
             if (value == null || bindables == null)
                 return;
 
-            bindedDatas[key] = value;
+            if (ContainsKey(key))
+                bindedDatas[key].obj = value;
+            else
+                bindedDatas[key] = new BindedValue(value);
 
             BindChanged(key);
         }
@@ -47,9 +74,14 @@ public class DataBinder : MonoBehaviour
         return bindedDatas.ContainsKey(key);
     }
 
-    public bool ContainsValue(object obj)
+    public Type GetType(string key)
     {
-        return bindedDatas.ContainsValue(obj);
+        return bindedDatas[key].type;
+    }
+
+    public Action<object> GetKeyAction(string key)
+    {
+        return bindedDatas[key].action;
     }
 
     public void BindChanged(string key)
