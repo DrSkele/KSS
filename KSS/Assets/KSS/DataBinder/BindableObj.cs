@@ -6,6 +6,11 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
 
+public enum DropDownBindingOption { dropdown_options, index }
+/// <summary>
+/// DataBinding helper for <see cref="UIBehaviour"/> components.
+/// Currently supports Text, Image, Toggle, Slider, and Dropdown.
+/// </summary>
 public class BindableObj : MonoBehaviour, IBindableObj
 {
     public List<string> keys;
@@ -29,13 +34,61 @@ public class BindableObj : MonoBehaviour, IBindableObj
             keys[0] = value;
         }
     }
-
+    /// <summary>
+    /// Binded UI component.
+    /// </summary>
     private UIBehaviour component;
+    /// <summary>
+    /// Invoked when value changed in <see cref="DataBinder"/>
+    /// </summary>
     private DataBindUpdater updater;
     private delegate void DataBindUpdater(DataBinder binder);
+    private DataBinder binderSource;
 
+    /// <summary>
+    /// When true, user input changes binded value.
+    /// </summary>
+    public bool doUpdateOnValueChanged;
+    public int bindingOption;
+    /// <summary>
+    /// index of binded component.
+    /// </summary>
     [HideInInspector]
     public int index;
+
+    private void Awake()
+    {
+        if(doUpdateOnValueChanged)
+        {
+            switch (component)
+            {
+                case Toggle toggle:
+                        toggle.onValueChanged.AddListener(ToggleValueChanged);
+                    break;
+                case Slider slider:
+                        slider.onValueChanged.AddListener(SliderValueChanged);
+                    break;
+                case Dropdown dropdown:
+                        dropdown.onValueChanged.AddListener(DropdownValueChanged);
+                    break;
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        switch (component)
+        {
+            case Toggle toggle:
+                    toggle.onValueChanged.RemoveListener(ToggleValueChanged);
+                break;
+            case Slider slider:
+                    slider.onValueChanged.RemoveListener(SliderValueChanged);
+                break;
+            case Dropdown dropdown:
+                    dropdown.onValueChanged.RemoveListener(DropdownValueChanged);
+                break;
+        }
+    }
 
     public string GetKey()
     {
@@ -44,6 +97,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
     public void UpdateDataBinding(DataBinder binder)
     {
         component ??= GetComponents<UIBehaviour>()[index];
+        binderSource = binder;
 
         switch (component)
         {
@@ -107,7 +161,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
         string KeyExtractor(Match match)
         {
             string matchValue = match.Value.Trim('{', '}');
-            if (binder.ContainsKey(matchValue))
+            if (binder.ContainsKey(matchValue) && binder.GetType(key) == typeof(string))
                 return binder[matchValue] as string;
 
             return match.Value;
@@ -143,8 +197,6 @@ public class BindableObj : MonoBehaviour, IBindableObj
             else
                 Debug.LogError($"Value for \"{key}\" does not contain Texture");
         }
-
-        
     }
 
     private void UpdateToggleBinding(DataBinder binder)
@@ -202,18 +254,44 @@ public class BindableObj : MonoBehaviour, IBindableObj
         }
 
         var dropdown = component as Dropdown;
-
-        dropdown.ClearOptions();
-
-        if (binder[key] is string[])
+        if((DropDownBindingOption)bindingOption == DropDownBindingOption.dropdown_options)
         {
-            string[] valueArray = binder[key] as string[];
-            foreach (var bindedValue in valueArray)
+            dropdown.ClearOptions();
+
+            if (binder[key] is string[])
             {
-                dropdown.options.Add(new Dropdown.OptionData(bindedValue));
+                string[] valueArray = binder[key] as string[];
+                foreach (var bindedValue in valueArray)
+                {
+                    dropdown.options.Add(new Dropdown.OptionData(bindedValue));
+                }
             }
+            else
+                Debug.LogError($"Value for \"{key}\" does not contain string array value");
         }
-        else
-            Debug.LogError($"Value for \"{key}\" does not contain string array value");
+        else if((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
+        {
+            if(binder[key] is int)
+            {
+                dropdown.value = (int)binder[key];
+            }
+            else
+                Debug.LogError($"Value for \"{key}\" does not contain int value");
+        }
+    }
+
+    private void ToggleValueChanged(bool isOn)
+    {
+        binderSource[key] = isOn;
+    }
+
+    private void SliderValueChanged(float value)
+    {
+        binderSource[key] = value;
+    }
+
+    private void DropdownValueChanged(int value)
+    {
+        binderSource[key] = value;
     }
 }

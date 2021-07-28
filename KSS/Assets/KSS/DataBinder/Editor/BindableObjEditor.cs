@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using UnityEngine;
+using System;
 
 [CustomEditor(typeof(BindableObj))]
 public class BindableObjEditor : Editor
@@ -30,6 +32,16 @@ public class BindableObjEditor : Editor
                 case TMP_Text txtPro:
                     EditorGUILayout.HelpBox("To insert keys in Text, wrap a key with brackets {}, i.e. {key}", MessageType.Info);
                     break;
+                case Toggle toggle:
+                case Slider slider:
+                    obj.key = EditorGUILayout.TextField("Key", obj.key);
+                    obj.doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                    break;
+                case Dropdown dropDown:
+                    obj.key = EditorGUILayout.TextField("Key", obj.key);
+                    obj.bindingOption = EditorGUILayout.Popup("Binding Option", obj.bindingOption, Enum.GetNames(typeof(DropDownBindingOption)));
+                    obj.doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                    break;
                 default:
                     obj.key = EditorGUILayout.TextField("Key", obj.key);
                     break;
@@ -42,7 +54,9 @@ public class BindableObjEditor : Editor
             EditorUtility.SetDirty(target);
         }
     }
-
+    /// <summary>
+    /// Supported types of component
+    /// </summary>
     private bool MatchTypes(UIBehaviour obj)
     {
         switch (obj)

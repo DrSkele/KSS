@@ -21,5 +21,19 @@ public class DataBinderTest : MonoBehaviour
         binder["Toggle"] = false;
         binder["Slider"] = 0.5f;
         binder["Dropdown"] = new string[] { "New", "options", "are here" };
+
+        binder.GetKeyEvent("Toggle").AddListener(DoAction);
+        binder.GetKeyEvent("Slider").AddListener(DoAction);
+    }
+
+    private void OnDisable()
+    {
+        binder.GetKeyEvent("Toggle").RemoveListener(DoAction);
+        binder.GetKeyEvent("Slider").RemoveListener(DoAction);
+    }
+
+    private void DoAction(object obj)
+    {
+        Debug.LogError(obj.ToString());
     }
 }

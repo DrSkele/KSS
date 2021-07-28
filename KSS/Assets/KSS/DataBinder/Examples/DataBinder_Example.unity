@@ -479,6 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - 
+  doUpdateOnValueChanged: 0
   index: 0
 --- !u!1 &277111390
 GameObject:
@@ -1117,6 +1118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Texture
+  doUpdateOnValueChanged: 0
   index: 0
 --- !u!1 &891457140
 GameObject:
@@ -1263,6 +1265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Sprite
+  doUpdateOnValueChanged: 0
   index: 0
 --- !u!114 &892758562
 MonoBehaviour:
@@ -1649,6 +1652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Dropdown
+  doUpdateOnValueChanged: 0
   index: 1
 --- !u!222 &1068816784
 CanvasRenderer:
@@ -1672,6 +1676,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Sprite
+  doUpdateOnValueChanged: 0
   index: 0
 --- !u!1 &1188922984
 GameObject:
@@ -1893,6 +1898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Slider
+  doUpdateOnValueChanged: 1
   index: 0
 --- !u!1 &1317236023
 GameObject:
@@ -2176,6 +2182,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - Toggle
+  doUpdateOnValueChanged: 1
   index: 0
 --- !u!1 &1550316255
 GameObject:
@@ -2338,6 +2345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keys:
   - 
+  doUpdateOnValueChanged: 0
   index: 0
 --- !u!222 &1553780523
 CanvasRenderer:
