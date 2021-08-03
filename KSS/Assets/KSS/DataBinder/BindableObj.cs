@@ -60,6 +60,8 @@ public class BindableObj : MonoBehaviour, IBindableObj
     {
         if(doUpdateOnValueChanged)
         {
+            component ??= GetComponents<UIBehaviour>()[index];
+
             switch (component)
             {
                 case Toggle toggle:

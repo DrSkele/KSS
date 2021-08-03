@@ -480,6 +480,7 @@ MonoBehaviour:
   keys:
   - 
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 0
 --- !u!1 &277111390
 GameObject:
@@ -1119,6 +1120,7 @@ MonoBehaviour:
   keys:
   - Texture
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 0
 --- !u!1 &891457140
 GameObject:
@@ -1266,6 +1268,7 @@ MonoBehaviour:
   keys:
   - Sprite
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 0
 --- !u!114 &892758562
 MonoBehaviour:
@@ -1517,6 +1520,7 @@ GameObject:
   - component: {fileID: 1068816780}
   - component: {fileID: 1068816784}
   - component: {fileID: 1068816785}
+  - component: {fileID: 1068816786}
   - component: {fileID: 1068816783}
   - component: {fileID: 1068816782}
   - component: {fileID: 1068816781}
@@ -1653,6 +1657,7 @@ MonoBehaviour:
   keys:
   - Dropdown
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 1
 --- !u!222 &1068816784
 CanvasRenderer:
@@ -1677,7 +1682,25 @@ MonoBehaviour:
   keys:
   - Sprite
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 0
+--- !u!114 &1068816786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068816779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keys:
+  - Index
+  doUpdateOnValueChanged: 1
+  bindingOption: 1
+  index: 1
 --- !u!1 &1188922984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,6 +1922,7 @@ MonoBehaviour:
   keys:
   - Slider
   doUpdateOnValueChanged: 1
+  bindingOption: 0
   index: 0
 --- !u!1 &1317236023
 GameObject:
@@ -2183,6 +2207,7 @@ MonoBehaviour:
   keys:
   - Toggle
   doUpdateOnValueChanged: 1
+  bindingOption: 0
   index: 0
 --- !u!1 &1550316255
 GameObject:
@@ -2346,6 +2371,7 @@ MonoBehaviour:
   keys:
   - 
   doUpdateOnValueChanged: 0
+  bindingOption: 0
   index: 0
 --- !u!222 &1553780523
 CanvasRenderer:
