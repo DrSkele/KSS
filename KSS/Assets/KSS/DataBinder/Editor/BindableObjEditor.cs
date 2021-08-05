@@ -22,7 +22,7 @@ public class BindableObjEditor : Editor
         {
             serializedObject.Update();
 
-            var supportedComponents = obj.GetComponents<UIBehaviour>().Where(x => MatchTypes(x));
+            var supportedComponents = obj.GetComponents<Component>().Where(x => MatchTypes(x));
 
             obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
 
@@ -39,7 +39,7 @@ public class BindableObjEditor : Editor
                     break;
                 case Dropdown dropDown:
                     obj.key = EditorGUILayout.TextField("Key", obj.key);
-                    obj.bindingOption = EditorGUILayout.Popup("Binding Option", obj.bindingOption, Enum.GetNames(typeof(DropDownBindingOption)));
+                    obj.bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
                     obj.doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                     break;
                 default:
@@ -57,7 +57,7 @@ public class BindableObjEditor : Editor
     /// <summary>
     /// Supported types of component
     /// </summary>
-    private bool MatchTypes(UIBehaviour obj)
+    private bool MatchTypes(Component obj)
     {
         switch (obj)
         {

@@ -14,6 +14,9 @@ public interface IBindableObj
     /// Key of this Obj
     /// </summary>
     string GetKey();
+    string GetAttachedObject();
+    string GetBindedComponent();
+    Type GetKeyType();
     void UpdateDataBinding(DataBinder binder);
 }
 /// <summary>
@@ -74,7 +77,7 @@ public class DataBinder : MonoBehaviour
         {
             if(bindables == null)
             {
-                bindables = GetComponentsInChildren<IBindableObj>();
+                bindables = GetComponentsInChildren<IBindableObj>(true);
             }
 
             if (bindedDatas == null)

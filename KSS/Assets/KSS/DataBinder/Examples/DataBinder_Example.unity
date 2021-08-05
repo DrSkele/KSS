@@ -477,8 +477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - 
+  _key: 
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1117,8 +1116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Texture
+  _key: Texture
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1265,8 +1263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Sprite
+  _key: Sprite
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1654,8 +1651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Dropdown
+  _key: Dropdown
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 1
@@ -1679,8 +1675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Sprite
+  _key: Sprite
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1696,8 +1691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Index
+  _key: Index
   doUpdateOnValueChanged: 1
   bindingOption: 1
   index: 1
@@ -1919,8 +1913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Slider
+  _key: Slider
   doUpdateOnValueChanged: 1
   bindingOption: 0
   index: 0
@@ -2204,8 +2197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - Toggle
+  _key: Toggle
   doUpdateOnValueChanged: 1
   bindingOption: 0
   index: 0
@@ -2368,8 +2360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - 
+  _key: 
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0

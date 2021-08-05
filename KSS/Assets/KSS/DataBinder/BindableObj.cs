@@ -7,49 +7,43 @@ using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
 
 public enum DropDownBindingOption { dropdown_options, index }
+
 /// <summary>
 /// DataBinding helper for <see cref="UIBehaviour"/> components.
 /// Currently supports Text, Image, Toggle, Slider, and Dropdown.
 /// </summary>
 public class BindableObj : MonoBehaviour, IBindableObj
 {
-    public List<string> keys;
+    public string _key;
     public string key
     {
         get
         {
-            if (keys == null || keys.Count == 0)
+            if (_key == null)
                 return string.Empty;
-            return keys[0];
+            return _key;
         }
         set
         {
-            if (keys == null)
-                keys = new List<string>();
-            if (keys.Count == 0)
-            {
-                keys.Add(value);
-                return;
-            }
-            keys[0] = value;
+            _key = value;
         }
     }
     /// <summary>
     /// Binded UI component.
     /// </summary>
-    private UIBehaviour component;
+    private Component component;
     /// <summary>
     /// Invoked when value changed in <see cref="DataBinder"/>
     /// </summary>
     private DataBindUpdater updater;
-    private delegate void DataBindUpdater(DataBinder binder);
+    public delegate void DataBindUpdater(DataBinder binder);
     private DataBinder binderSource;
 
     /// <summary>
     /// When true, user input changes binded value.
     /// </summary>
     public bool doUpdateOnValueChanged;
-    public int bindingOption;
+    public DropDownBindingOption bindingOption;
     /// <summary>
     /// index of binded component.
     /// </summary>
@@ -91,10 +85,67 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 break;
         }
     }
-
     public string GetKey()
     {
+        if (component is Text)
+        {
+            var txt = component as Text;
+            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
+            string keys = "";
+            var matches = Regex.Matches(txt.text, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            for (int i = 0; i < matches.Count; i++)
+            {
+                keys += matches[i].Value + ((i != matches.Count - 1) ? ", " : "");
+            }
+            
+        }
+        else if (component is TMP_Text)
+        {
+            var txt = component as TMP_Text;
+            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
+            string keys = "";
+            var matches = Regex.Matches(txt.text, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            for (int i = 0; i < matches.Count; i++)
+            {
+                keys += matches[i].Value + ((i != matches.Count - 1) ? ", " : "");
+            }
+        }
         return key;
+    }
+    public string GetAttachedObject()
+    {
+        return this.gameObject.name;
+    }
+    public string GetBindedComponent()
+    {
+        return component.name;
+    }
+    public Type GetKeyType()
+    {
+        switch (component)
+        {
+            case Text txt:
+            case TMP_Text txtPro:
+                return typeof(string);
+            case Image img:
+                return typeof(Sprite);
+            case RawImage imgRaw:
+                return typeof(Texture);
+            case Toggle toggle:
+                return typeof(bool);
+            case Slider slider:
+                return typeof(float);
+            case Dropdown dropdown:
+                switch(bindingOption)
+                {
+                    case DropDownBindingOption.dropdown_options:
+                        return typeof(string[]);
+                    case DropDownBindingOption.index:
+                        return typeof(int);
+                }
+                break;
+        }
+        return null;
     }
     public void UpdateDataBinding(DataBinder binder)
     {
@@ -143,7 +194,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
     {
         if (component is null)
         {
-            Debug.LogError($"Wrong Component Settings On {this.name}.");
+            Debug.LogError($"Wrong Component Settings On {this.name}.", this);
             return;
         }
 
@@ -153,7 +204,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
             string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
             txt.text = Regex.Replace(txt.text, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
         }
-        if (component is TMP_Text)
+        else if (component is TMP_Text)
         {
             var txt = component as TMP_Text;
             string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
@@ -163,7 +214,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
         string KeyExtractor(Match match)
         {
             string matchValue = match.Value.Trim('{', '}');
-            if (binder.ContainsKey(matchValue) && binder.GetType(key) == typeof(string))
+            if (binder.ContainsKey(matchValue) && binder.GetType(matchValue) == typeof(string))
                 return binder[matchValue] as string;
 
             return match.Value;
@@ -174,12 +225,12 @@ public class BindableObj : MonoBehaviour, IBindableObj
     {
         if (component is null)
         {
-            Debug.LogError($"Wrong component settings on object {this.name}.");
+            Debug.LogError($"Wrong component settings on object {this.name}.", this);
             return;
         }
         if (binder.ContainsKey(key) == false)
         {
-            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
             return;
         }
 
@@ -189,7 +240,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
             if (binder[key] is Sprite)
                 image.sprite = binder[key] as Sprite;
             else
-                Debug.LogError($"Value for \"{key}\" does not contain Sprite");
+                Debug.LogError($"Value for \"{key}\" does not contain a Sprite", this);
         }
         if(component is RawImage)
         {
@@ -197,7 +248,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
             if (binder[key] is Texture)
                 image.texture = binder[key] as Texture;
             else
-                Debug.LogError($"Value for \"{key}\" does not contain Texture");
+                Debug.LogError($"Value for \"{key}\" does not contain a Texture", this);
         }
     }
 
@@ -205,12 +256,12 @@ public class BindableObj : MonoBehaviour, IBindableObj
     {
         if (component is null)
         {
-            Debug.LogError($"Wrong component settings on object {this.name}.");
+            Debug.LogError($"Wrong component settings on object {this.name}.", this);
             return;
         }
         if (binder.ContainsKey(key) == false)
         {
-            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
             return;
         }
 
@@ -219,19 +270,19 @@ public class BindableObj : MonoBehaviour, IBindableObj
         if (binder[key] is bool)
             toggle.isOn = (bool)binder[key];
         else
-            Debug.LogError($"Value for \"{key}\" does not contain boolean value");
+            Debug.LogError($"Value for \"{key}\" does not contain a boolean value", this);
     }
 
     private void UpdateSliderBinding(DataBinder binder)
     {
         if(component is null)
         {
-            Debug.LogError($"Wrong component settings on object {this.name}.");
+            Debug.LogError($"Wrong component settings on object {this.name}.", this);
             return;
         }
         if (binder.ContainsKey(key) == false)
         {
-            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
             return;
         }
 
@@ -240,18 +291,18 @@ public class BindableObj : MonoBehaviour, IBindableObj
         if (binder[key] is float)
             slider.value = (float)binder[key];
         else
-            Debug.LogError($"Value for \"{key}\" does not contain float value");
+            Debug.LogError($"Value for \"{key}\" does not contain a float value", this);
     }
     private void UpdateDropdownBinding(DataBinder binder)
     {
         if(component is null)
         {
-            Debug.LogError($"Wrong component settings on object {this.name}.");
+            Debug.LogError($"Wrong component settings on object {this.name}.", this);
             return;
         }
         if (binder.ContainsKey(key) == false)
         {
-            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder");
+            Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
             return;
         }
 
@@ -269,7 +320,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 }
             }
             else
-                Debug.LogError($"Value for \"{key}\" does not contain string array value");
+                Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
         }
         else if((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
         {
@@ -278,7 +329,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 dropdown.value = (int)binder[key];
             }
             else
-                Debug.LogError($"Value for \"{key}\" does not contain int value");
+                Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
         }
     }
 
