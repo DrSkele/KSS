@@ -1,4 +1,6 @@
 using UnityEditor;
+using UnityEngine;
+
 [CustomEditor(typeof(BindableActivator))]
 public class BindableActivatorEditor : Editor
 {
@@ -15,7 +17,9 @@ public class BindableActivatorEditor : Editor
         {
             serializedObject.Update();
 
-            activator.key = EditorGUILayout.TextField("Key", activator.key);
+            activator.useNameAsKey = EditorGUILayout.Toggle(new GUIContent("UseNameAsKey", "Use attached gameobject's name as key"), activator.useNameAsKey);
+            if(activator.useNameAsKey == false)
+                activator.key = EditorGUILayout.TextField("Key", activator.key);
             EditorGUILayout.HelpBox("True : activates \nFalse : deactivates", MessageType.Info);
 
             serializedObject.ApplyModifiedProperties();

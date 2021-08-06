@@ -8,6 +8,8 @@ public class BindableActivator : MonoBehaviour, IBindableObj
     {
         get
         {
+            if (useNameAsKey)
+                return obj.name;
             if (_key == null)
                 return string.Empty;
             return _key;
@@ -17,7 +19,9 @@ public class BindableActivator : MonoBehaviour, IBindableObj
             _key = value;
         }
     }
-    public GameObject obj => this.gameObject;
+
+    public bool useNameAsKey = true;
+    GameObject obj => this.gameObject;
 
     public string GetKey()
     {
@@ -42,7 +46,7 @@ public class BindableActivator : MonoBehaviour, IBindableObj
             Debug.LogError($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
             return;
         }
-        if (binder.GetKeyType(key) == typeof(bool))
+        if (binder.GetValueType(key) == typeof(bool))
         {
             obj.SetActive((bool)binder[key]);
         }

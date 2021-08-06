@@ -216,7 +216,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
         string KeyExtractor(Match match)
         {
             string matchValue = match.Value.Trim('{', '}');
-            if (binder.ContainsKey(matchValue) && binder.GetKeyType(matchValue) == typeof(string))
+            if (binder.ContainsKey(matchValue) && binder.GetValueType(matchValue) == typeof(string))
                 return binder[matchValue] as string;
 
             return match.Value;

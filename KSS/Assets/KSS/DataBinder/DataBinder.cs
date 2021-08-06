@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -105,6 +103,10 @@ public class DataBinder : MonoBehaviour
     {
         return obj.AddComponent<DataBinder>();
     }
+    public static DataBinder GetDataBinderInParent(GameObject obj)
+    {
+        return obj.GetComponentInParent<DataBinder>();
+    }
     /// <summary>
     /// Check whether provided key exists.
     /// </summary>
@@ -116,7 +118,7 @@ public class DataBinder : MonoBehaviour
     /// Get type of value corresponding to the key.
     /// If there is no key defined, returns null.
     /// </summary>
-    public Type GetType(string key)
+    public Type GetValueType(string key)
     {
         if(ContainsKey(key))
             return bindedDatas[key].type;
@@ -124,13 +126,14 @@ public class DataBinder : MonoBehaviour
     }
     /// <summary>
     /// Get callback for value change event of the key.
-    /// If there is no key defined, returns null.
+    /// If there is no key defined, makes empty value and returns event.
     /// </summary>
     public UnityEvent<object> GetKeyEvent(string key)
     {
         if(ContainsKey(key))
             return bindedDatas[key].action;
-        return null;
+        this[key] = null;
+        return bindedDatas[key].action;
     }
     /// <summary>
     /// Updates binded value of <see cref="IBindableObj"/> in child.

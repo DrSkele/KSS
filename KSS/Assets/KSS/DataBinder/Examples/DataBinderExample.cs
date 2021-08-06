@@ -23,8 +23,8 @@ public class DataBinderExample : MonoBehaviour
         binder["Dropdown"] = new string[] { "New", "options", "are here" };
         binder["Index"] = 0;
 
-        binder["ActiveFalse"] = false;
-        binder["ActiveTrue"] = true;
+        binder["TurnOff"] = false;
+        binder["TurnOn"] = true;
 
         binder.GetKeyEvent("Toggle").AddListener(DoAction);
         binder.GetKeyEvent("Slider").AddListener(DoAction);
