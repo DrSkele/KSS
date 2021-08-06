@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,7 +6,6 @@ using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
 
 public enum DropDownBindingOption { dropdown_options, index }
-
 /// <summary>
 /// DataBinding helper for <see cref="UIBehaviour"/> components.
 /// Currently supports Text, Image, Toggle, Slider, and Dropdown.
@@ -85,6 +83,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 break;
         }
     }
+    #region IBindableObjFeature
     public string GetKey()
     {
         if (component is Text)
@@ -186,6 +185,9 @@ public class BindableObj : MonoBehaviour, IBindableObj
         if(updater != null)
             updater(binder);
     }
+    #endregion
+
+    #region UpdateBinding
     /// <summary>
     /// Updates data from Text component's text.
     /// key included in the text in format "{key}" will be replaced with value pair.
@@ -214,7 +216,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
         string KeyExtractor(Match match)
         {
             string matchValue = match.Value.Trim('{', '}');
-            if (binder.ContainsKey(matchValue) && binder.GetType(matchValue) == typeof(string))
+            if (binder.ContainsKey(matchValue) && binder.GetKeyType(matchValue) == typeof(string))
                 return binder[matchValue] as string;
 
             return match.Value;
@@ -332,19 +334,20 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
         }
     }
+    #endregion
 
+    #region BindedValueChangedListener
     private void ToggleValueChanged(bool isOn)
     {
         binderSource[key] = isOn;
     }
-
     private void SliderValueChanged(float value)
     {
         binderSource[key] = value;
     }
-
     private void DropdownValueChanged(int value)
     {
         binderSource[key] = value;
     }
+    #endregion
 }

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using UnityEngine;
-using System;
 
 [CustomEditor(typeof(BindableObj))]
 public class BindableObjEditor : Editor
