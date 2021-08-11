@@ -12,7 +12,7 @@ public enum DropDownBindingOption { dropdown_options, index }
 /// </summary>
 public class BindableObj : MonoBehaviour, IBindableObj
 {
-    public string _key;
+    private string _key;
     public string key
     {
         get
@@ -52,7 +52,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
     {
         if(doUpdateOnValueChanged)
         {
-            component ??= GetComponents<UIBehaviour>()[index];
+            component ??= GetComponents<Component>()[index];
 
             switch (component)
             {
@@ -83,6 +83,7 @@ public class BindableObj : MonoBehaviour, IBindableObj
                 break;
         }
     }
+
     #region IBindableObjFeature
     public string GetKey()
     {
