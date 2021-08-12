@@ -17,20 +17,22 @@ public class DataBinderExample : MonoBehaviour
         binder["Index"] = 0;
 
         binder["TurnOff"] = false;
-        binder["TurnOn"] = true;
+        binder["TurnOn"] = false;
 
-        binder.GetKeyEvent("Toggle").AddListener(DoAction);
+        binder.GetKeyEvent("Toggle").AddListener(ToggleAction);
         binder.GetKeyEvent("Slider").AddListener(DoAction);
         binder.GetKeyEvent("Index").AddListener(DoAction);
     }
-
     private void OnDestroy()
     {
-        binder.GetKeyEvent("Toggle").RemoveListener(DoAction);
+        binder.GetKeyEvent("Toggle").RemoveListener(ToggleAction);
         binder.GetKeyEvent("Slider").RemoveListener(DoAction);
         binder.GetKeyEvent("Index").RemoveListener(DoAction);
     }
-
+    private void ToggleAction(object obj)
+    {
+        binder["TurnOn"] = (bool)obj;
+    }
     private void DoAction(object obj)
     {
         Debug.LogError(obj.ToString());
