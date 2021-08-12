@@ -1,22 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
+using System.Linq;
 
-/// <summary>
-/// Object with DataBinding
-/// </summary>
-public interface IBindableObj
-{
-    /// <summary>
-    /// Key of this Obj
-    /// </summary>
-    string GetKey();
-    string GetAttachedObject();
-    string GetBindedComponent();
-    Type GetKeyType();
-    void UpdateDataBinding(DataBinder binder);
-}
 /// <summary>
 /// Value binded to the key.
 /// </summary>
@@ -57,13 +43,13 @@ public class BindedValue
 /// Data Manager for DataBinding.
 /// Must be placed higher in hierarchy than <see cref="IBindableObj"/> to work.
 /// </summary>
-public class DataBinder : MonoBehaviour
+public class DataBinder : Singleton<DataBinder>
 {
     /// <summary>
     /// Dictionary for databinding.
     /// </summary>
-    private Dictionary<string, BindedValue> bindedDatas = null;
-    private IBindableObj[] bindables = null;
+    private Dictionary<string, BindedValue> bindedDatas = new Dictionary<string, BindedValue>();
+    private List<IBindableObj> bindables = new List<IBindableObj>();
     /// <summary>
     /// Gets / Sets value of the key.
     /// Updates binded value everytime on Set.
@@ -73,18 +59,10 @@ public class DataBinder : MonoBehaviour
         get => bindedDatas[key].obj;
         set
         {
-            if(bindables == null)
-            {
-                bindables = GetComponentsInChildren<IBindableObj>(true);
-            }
-
             if (bindedDatas == null)
             {
                 bindedDatas = new Dictionary<string, BindedValue>();
             }
-
-            if (value == null || bindables == null)
-                return;
 
             if (ContainsKey(key))
                 bindedDatas[key].obj = value;
@@ -95,17 +73,26 @@ public class DataBinder : MonoBehaviour
         }
     }
     /// <summary>
-    /// Adds <see cref="DataBinder"/> component to specified object.
-    /// There is no pre-defined keys, so There is no need to attach this DataBinder component in Editor.
-    /// Instead, Call this method in runtime to make one.
+    /// Register object to the databinder, so it can be updated when binded value changes.
     /// </summary>
-    public static DataBinder Init(GameObject obj)
+    public void AddToDataBinder(IBindableObj obj)
     {
-        return obj.AddComponent<DataBinder>();
+        bindables.Add(obj);
     }
-    public static DataBinder GetDataBinderInParent(GameObject obj)
+    /// <summary>
+    /// Removes object from the databinder, so it won't be updated anymore.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void RemoveFromDataBinder(IBindableObj obj, bool removeAllData = false)
     {
-        return obj.GetComponentInParent<DataBinder>();
+        bindables.Remove(obj);
+        if (removeAllData)
+        {
+            foreach (var key in obj.GetKeys())
+            {
+                bindedDatas.Remove(key);
+            }
+        }
     }
     /// <summary>
     /// Check whether provided key exists.
@@ -136,13 +123,20 @@ public class DataBinder : MonoBehaviour
         return bindedDatas[key].action;
     }
     /// <summary>
+    /// Removes key and binded data of the key.
+    /// </summary>
+    public void RemoveKey(string key)
+    {
+        bindedDatas.Remove(key);
+    }
+    /// <summary>
     /// Updates binded value of <see cref="IBindableObj"/> in child.
     /// </summary>
     private void UpdateBindedValue(string key)
     {
         foreach (var bindable in bindables)
         {
-            if (string.IsNullOrEmpty(bindable.GetKey()) || bindable.GetKey() == key)
+            if (bindable.GetKeys().Any(x => string.IsNullOrEmpty(x)) || bindable.GetKeys().Any(x => x == key))
                 bindable.UpdateDataBinding(this);
         }
     }

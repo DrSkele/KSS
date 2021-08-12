@@ -1,19 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DataBinderExample : MonoBehaviour
 {
     public Sprite testSprite;
     public Texture testTexture;
-    DataBinder binder;
+    DataBinder binder => DataBinder.Instance;
 
     private void Awake()
-    {
-        binder = DataBinder.Init(this.gameObject);
-    }
-
-    private void OnEnable()
     {
         binder["Name"] = "Data Binder Example";
         binder["Sprite"] = testSprite;
@@ -31,7 +24,7 @@ public class DataBinderExample : MonoBehaviour
         binder.GetKeyEvent("Index").AddListener(DoAction);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         binder.GetKeyEvent("Toggle").RemoveListener(DoAction);
         binder.GetKeyEvent("Slider").RemoveListener(DoAction);

@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: 
+  key: 
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Texture
+  key: Texture
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1470,7 +1470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Sprite
+  key: Sprite
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -1976,7 +1976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Dropdown
+  key: Dropdown
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 1
@@ -2000,7 +2000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Sprite
+  key: Sprite
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -2016,7 +2016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Index
+  key: Index
   doUpdateOnValueChanged: 1
   bindingOption: 1
   index: 1
@@ -2232,7 +2232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1260461987
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2408,7 +2408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Slider
+  key: Slider
   doUpdateOnValueChanged: 1
   bindingOption: 0
   index: 0
@@ -2692,7 +2692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: Toggle
+  key: Toggle
   doUpdateOnValueChanged: 1
   bindingOption: 0
   index: 0
@@ -2855,7 +2855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: 
+  key: 
   doUpdateOnValueChanged: 0
   bindingOption: 0
   index: 0
@@ -3076,7 +3076,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1673203915
 RectTransform:
   m_ObjectHideFlags: 0

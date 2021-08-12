@@ -23,9 +23,9 @@ public class BindableActivator : MonoBehaviour, IBindableObj
     public bool useNameAsKey = true;
     GameObject obj => this.gameObject;
 
-    public string GetKey()
+    public string[] GetKeys()
     {
-        return key;
+        return new string[] { key };
     }
     public string GetAttachedObject()
     {
@@ -35,7 +35,7 @@ public class BindableActivator : MonoBehaviour, IBindableObj
     {
         return "Gameobject";
     }
-    public Type GetKeyType()
+    public Type GetRequiredType()
     {
         return typeof(bool);
     }
@@ -50,5 +50,15 @@ public class BindableActivator : MonoBehaviour, IBindableObj
         {
             obj.SetActive((bool)binder[key]);
         }
+    }
+
+    private void Start()
+    {
+        DataBinder.Instance.AddToDataBinder(this);
+        UpdateDataBinding(DataBinder.Instance);
+    }
+    private void OnDestroy()
+    {
+        DataBinder.Instance.RemoveFromDataBinder(this);
     }
 }

@@ -1,18 +1,17 @@
 using UnityEditor;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using UnityEngine;
 
-[CustomEditor(typeof(BindableObj))]
-public class BindableObjEditor : Editor
+[CustomEditor(typeof(BindableUI))]
+public class BindableUIEditor : Editor
 {
-    BindableObj obj = null;
+    BindableUI obj = null;
 
     private void OnEnable()
     {
-        obj = (BindableObj)target;
+        obj = (BindableUI)target;
     }
 
     public override void OnInspectorGUI()
