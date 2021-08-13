@@ -1,7 +1,10 @@
 using System;
 using UnityEngine;
 
-public class BindableActivator : MonoBehaviour, IBindableObj
+/// <summary>
+/// Bindable SetActive Controller
+/// </summary>
+public class BindableActivator : AlwaysBindedObj
 {
     public string _key;
     public string key
@@ -23,23 +26,23 @@ public class BindableActivator : MonoBehaviour, IBindableObj
     public bool useNameAsKey = true;
     GameObject obj => this.gameObject;
 
-    public string[] GetKeys()
+    public override string[] GetKeys()
     {
         return new string[] { key };
     }
-    public string GetAttachedObject()
+    public override string GetAttachedObject()
     {
         return this.gameObject.name;
     }
-    public string GetBindedComponent()
+    public override string GetBindedComponent()
     {
         return "Gameobject";
     }
-    public Type GetRequiredType()
+    public override Type GetRequiredType()
     {
         return typeof(bool);
     }
-    public void UpdateDataBinding(DataBinder binder)
+    public override void UpdateDataBinding(DataBinder binder)
     {
         if (binder.ContainsKey(key) == false)
         {
@@ -50,15 +53,5 @@ public class BindableActivator : MonoBehaviour, IBindableObj
         {
             obj.SetActive((bool)binder[key]);
         }
-    }
-
-    private void Start()
-    {
-        DataBinder.Instance.AddToDataBinder(this);
-        UpdateDataBinding(DataBinder.Instance);
-    }
-    private void OnDestroy()
-    {
-        DataBinder.Instance.RemoveFromDataBinder(this);
     }
 }

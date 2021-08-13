@@ -18,7 +18,7 @@ public class BindedValue
         set
         {
             _obj = value;
-            type = value.GetType();
+            type = value?.GetType();
             action?.Invoke(value);
         }
     }
@@ -35,7 +35,7 @@ public class BindedValue
     public BindedValue(object obj)
     {
         this.obj = obj;
-        type = obj.GetType();
+        type = obj?.GetType();
         action = new UnityEvent<object>();
     }
 }
@@ -49,7 +49,8 @@ public class DataBinder : Singleton<DataBinder>
     /// Dictionary for databinding.
     /// </summary>
     private Dictionary<string, BindedValue> bindedDatas = new Dictionary<string, BindedValue>();
-    private List<IBindableObj> bindables = new List<IBindableObj>();
+    private HashSet<IBindableObj> bindables = new HashSet<IBindableObj>();
+    public static List<AlwaysBindedObj> alwaysBinded = new List<AlwaysBindedObj>();
     /// <summary>
     /// Gets / Sets value of the key.
     /// Updates binded value everytime on Set.
@@ -80,9 +81,15 @@ public class DataBinder : Singleton<DataBinder>
         bindables.Add(obj);
     }
     /// <summary>
+    /// Register object to the databinder, so it can be updated when binded value changes.
+    /// </summary>
+    public static void AddToDataBinder(AlwaysBindedObj obj)
+    {
+        alwaysBinded.Add(obj);
+    }
+    /// <summary>
     /// Removes object from the databinder, so it won't be updated anymore.
     /// </summary>
-    /// <param name="obj"></param>
     public void RemoveFromDataBinder(IBindableObj obj, bool removeAllData = false)
     {
         bindables.Remove(obj);
@@ -93,6 +100,13 @@ public class DataBinder : Singleton<DataBinder>
                 bindedDatas.Remove(key);
             }
         }
+    }
+    /// <summary>
+    /// Removes object from the databinder, so it won't be updated anymore.
+    /// </summary>
+    public static void RemoveFromDataBinder(AlwaysBindedObj obj)
+    {
+        alwaysBinded.Remove(obj);
     }
     /// <summary>
     /// Check whether provided key exists.
@@ -134,10 +148,14 @@ public class DataBinder : Singleton<DataBinder>
     /// </summary>
     private void UpdateBindedValue(string key)
     {
-        foreach (var bindable in bindables)
+        var updated = bindables.Concat(alwaysBinded?
+            .Where(bind => bind != null && bind.gameObject.scene.IsValid())?.Select(binded => binded as IBindableObj)
+            ?? new IBindableObj[] { }).ToArray();
+        foreach (var bindable in updated)
         {
             if (bindable.GetKeys().Any(x => string.IsNullOrEmpty(x)) || bindable.GetKeys().Any(x => x == key))
                 bindable.UpdateDataBinding(this);
         }
+        
     }
 }

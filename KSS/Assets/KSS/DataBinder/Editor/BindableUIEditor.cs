@@ -25,6 +25,7 @@ public class BindableUIEditor : Editor
         obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
 
         string key = "";
+        string txtString = "";
         bool doUpdateOnValueChanged = false;
         DropDownBindingOption bindingOption = DropDownBindingOption.dropdown_options;
 
@@ -32,6 +33,7 @@ public class BindableUIEditor : Editor
         {
             case Text txt:
             case TMP_Text txtPro:
+                txtString = EditorGUILayout.TextArea(obj.txtString, GUILayout.Height(50));
                 EditorGUILayout.HelpBox("To insert keys in Text, wrap a key with brackets {}, i.e. {key}", MessageType.Info);
                 break;
             case Toggle toggle:
@@ -56,6 +58,7 @@ public class BindableUIEditor : Editor
             EditorUtility.SetDirty(target);
             Undo.RegisterCompleteObjectUndo(obj, nameof(BindableUI) + " undo");
             obj.key = key;
+            obj.txtString = txtString;
             obj.doUpdateOnValueChanged = doUpdateOnValueChanged;
             obj.bindingOption = bindingOption;
         }

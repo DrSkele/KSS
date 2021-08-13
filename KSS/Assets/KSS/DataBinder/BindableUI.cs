@@ -25,6 +25,9 @@ public class BindableUI : BindableObj
     public delegate void DataBindUpdater(DataBinder binder);
     private DataBinder binderSource;
 
+    public string txtString;
+    public string[] txtKeys;
+
     /// <summary>
     /// When true, user input changes binded value.
     /// </summary>
@@ -35,6 +38,20 @@ public class BindableUI : BindableObj
     /// </summary>
     [HideInInspector]
     public int index;
+
+    private void Awake()
+    {
+        if (component is Text || component is TMP_Text)
+        {
+            string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
+            var matches = Regex.Matches(txtString, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            txtKeys = new string[matches.Count];
+            for (int i = 0; i < matches.Count; i++)
+            {
+                txtKeys[i] = matches[i].Value.Trim('{', '}');
+            }
+        }
+    }
 
     private void Start()
     {
@@ -75,31 +92,7 @@ public class BindableUI : BindableObj
     #region IBindableObjFeature
     public override string[] GetKeys()
     {
-        List<string> keys = new List<string>();
-        if (component is Text)
-        {
-            var txt = component as Text;
-            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value";
-            var matches = Regex.Matches(txt.text, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
-            for (int i = 0; i < matches.Count; i++)
-            {
-                keys.Add(matches[i].Value + ((i != matches.Count - 1) ? ", " : ""));
-            }
-            return keys.ToArray();
-        }
-        else if (component is TMP_Text)
-        {
-            var txt = component as TMP_Text;
-            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
-            
-            var matches = Regex.Matches(txt.text, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
-            for (int i = 0; i < matches.Count; i++)
-            {
-                keys.Add(matches[i].Value + ((i != matches.Count - 1) ? ", " : ""));
-            }
-            return keys.ToArray();
-        }
-        return new string[] { key };
+        return component is Text || component is TMP_Text ? txtKeys : new string[] { key };
     }
     public override string GetAttachedObject()
     {
@@ -146,7 +139,7 @@ public class BindableUI : BindableObj
             Debug.LogError($"Wrong component settings on object \"{this.name}\".", this);
             return;
         }
-        if (binder.ContainsKey(key) == false && (component is Text || component is TMP_Text) == false)
+        if (binder.ContainsKey(key) == false && !(component is Text || component is TMP_Text))
         {
             Debug.LogError($"Key \"{key}\" on object \"{this.name}\" does not exist in DataBinder", this);
             return;
@@ -195,24 +188,25 @@ public class BindableUI : BindableObj
     /// </summary>
     private void UpdateTextBinding(DataBinder binder)
     {
+        string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
+        string replacedText = Regex.Replace(txtString, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+
         if (component is Text)
         {
             var txt = component as Text;
-            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
-            txt.text = Regex.Replace(txt.text, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            txt.text = replacedText;       
         }
         else if (component is TMP_Text)
         {
             var txt = component as TMP_Text;
-            string pattern = @"\{[^}]*}"; //ex. "{key}" => "Value"
-            txt.text = Regex.Replace(txt.text, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            txt.text = replacedText;
         }
 
         string KeyExtractor(Match match)
         {
             string matchValue = match.Value.Trim('{', '}');
-            if (binder.ContainsKey(matchValue) && binder.GetValueType(matchValue) == typeof(string))
-                return binder[matchValue] as string;
+            if (binder.ContainsKey(matchValue))// && binder.GetValueType(matchValue) == typeof(string))
+                return binder[matchValue].ToString();
 
             return match.Value;
         }

@@ -11,8 +11,8 @@ public class DataBinderExample : MonoBehaviour
         binder["Name"] = "Data Binder Example";
         binder["Sprite"] = testSprite;
         binder["Texture"] = testTexture;
-        binder["Toggle"] = false;
         binder["Slider"] = 0.5f;
+        binder["Toggle"] = false;
         binder["Dropdown"] = new string[] { "New", "options", "are here" };
         binder["Index"] = 0;
 

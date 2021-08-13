@@ -7,7 +7,7 @@ using UnityEngine;
 public interface IBindableObj
 {
     /// <summary>
-    /// Get keys of this Obj. Usually there's one key, but varies with implemented obj.
+    /// Get keys of this Obj. Usually there's only one key, but varies with implemented object.
     /// </summary>
     string[] GetKeys();
     /// <summary>
@@ -29,6 +29,11 @@ public interface IBindableObj
     /// </summary>
     void UpdateDataBinding(DataBinder binder);
 }
+/// <summary>
+/// Basic Bindable Object.
+/// Registers itself to Databinder once it's enabled.
+/// Unregisters when disabled.
+/// </summary>
 public abstract class BindableObj : MonoBehaviour, IBindableObj
 {
     public abstract string[] GetKeys();
@@ -45,5 +50,30 @@ public abstract class BindableObj : MonoBehaviour, IBindableObj
     private void OnDisable()
     {
         DataBinder.Instance.RemoveFromDataBinder(this);
+    }
+}
+/// <summary>
+/// Special Bindable Object.
+/// Registered to DataBinder even if it's disabled in hierarchy.
+/// Always binded during it's lifespan.
+/// </summary>
+public abstract class AlwaysBindedObj : MonoBehaviour, IBindableObj
+{
+    public abstract string[] GetKeys();
+    public abstract string GetAttachedObject();
+    public abstract string GetBindedComponent();
+    public abstract Type GetRequiredType();
+    public abstract void UpdateDataBinding(DataBinder binder);
+    /// <summary>
+    /// Registers to databinder once it's created.
+    /// Binded whether it's disabled or enabled.
+    /// </summary>
+    public AlwaysBindedObj() : base()
+    {
+        DataBinder.AddToDataBinder(this);
+    }
+    ~AlwaysBindedObj()
+    {
+        DataBinder.RemoveFromDataBinder(this);
     }
 }
