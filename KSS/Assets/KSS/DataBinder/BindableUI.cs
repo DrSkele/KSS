@@ -39,8 +39,10 @@ public class BindableUI : BindableObj
     [HideInInspector]
     public int index;
 
-    private void Awake()
+    private void Start()
     {
+        component ??= GetComponents<Component>()[index];
+
         if (component is Text || component is TMP_Text)
         {
             string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
@@ -49,26 +51,28 @@ public class BindableUI : BindableObj
             for (int i = 0; i < matches.Count; i++)
             {
                 txtKeys[i] = matches[i].Value.Trim('{', '}');
+                Debug.Log(txtKeys[i]);
             }
         }
-    }
 
-    private void Start()
-    {
-        if(doUpdateOnValueChanged)
+        if (doUpdateOnValueChanged)
         {
-            component ??= GetComponents<Component>()[index];
-
             switch (component)
             {
                 case Toggle toggle:
-                        toggle.onValueChanged.AddListener(ToggleValueChanged);
+                    toggle.onValueChanged.AddListener(ToggleValueChanged);
                     break;
                 case Slider slider:
-                        slider.onValueChanged.AddListener(SliderValueChanged);
+                    slider.onValueChanged.AddListener(SliderValueChanged);
                     break;
                 case Dropdown dropdown:
-                        dropdown.onValueChanged.AddListener(DropdownValueChanged);
+                    dropdown.onValueChanged.AddListener(DropdownValueChanged);
+                    break;
+                case InputField input:
+                    input.onEndEdit.AddListener(InputFieldValueChanged);
+                    break;
+                case TMP_InputField inputPro:
+                    inputPro.onEndEdit.AddListener(InputFieldValueChanged);
                     break;
             }
         }
@@ -85,6 +89,15 @@ public class BindableUI : BindableObj
                 break;
             case Dropdown dropdown:
                     dropdown.onValueChanged.RemoveListener(DropdownValueChanged);
+                break;
+            case TMP_Dropdown dropdown:
+                dropdown.onValueChanged.RemoveListener(DropdownValueChanged);
+                break;
+            case InputField input:
+                input.onEndEdit.RemoveListener(InputFieldValueChanged);
+                break;
+            case TMP_InputField inputPro:
+                inputPro.onEndEdit.RemoveListener(InputFieldValueChanged);
                 break;
         }
     }
@@ -118,6 +131,7 @@ public class BindableUI : BindableObj
             case Slider slider:
                 return typeof(float);
             case Dropdown dropdown:
+            case TMP_Dropdown dropdownPro:
                 switch(bindingOption)
                 {
                     case DropDownBindingOption.dropdown_options:
@@ -126,6 +140,9 @@ public class BindableUI : BindableObj
                         return typeof(int);
                 }
                 break;
+            case InputField input:
+            case TMP_InputField inputPro:
+                return typeof(string);
         }
         return null;
     }
@@ -170,8 +187,15 @@ public class BindableUI : BindableObj
                 }
                 break;
             case Dropdown dropdown:
+            case TMP_Dropdown dropdownPro:
                 {
                     updater = UpdateDropdownBinding;
+                }
+                break;
+            case InputField input:
+            case TMP_InputField inputPro:
+                {
+                    updater = UpdateInputFieldBinding;
                 }
                 break;
         }
@@ -253,30 +277,85 @@ public class BindableUI : BindableObj
     }
     private void UpdateDropdownBinding(DataBinder binder)
     {
-        var dropdown = component as Dropdown;
-        if((DropDownBindingOption)bindingOption == DropDownBindingOption.dropdown_options)
+        if (component is Dropdown)
         {
-            dropdown.ClearOptions();
+            var dropdown = component as Dropdown;
+            if ((DropDownBindingOption)bindingOption == DropDownBindingOption.dropdown_options)
+            {
+                dropdown.ClearOptions();
 
-            if (binder[key] is string[])
-            {
-                string[] valueArray = binder[key] as string[];
-                foreach (var bindedValue in valueArray)
+                if (binder[key] is string[])
                 {
-                    dropdown.options.Add(new Dropdown.OptionData(bindedValue));
+                    string[] valueArray = binder[key] as string[];
+                    foreach (var bindedValue in valueArray)
+                    {
+                        dropdown.options.Add(new Dropdown.OptionData(bindedValue));
+                    }
                 }
+                else
+                    Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
             }
-            else
-                Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
-        }
-        else if((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
-        {
-            if(binder[key] is int)
+            else if ((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
             {
-                dropdown.value = (int)binder[key];
+                if (binder[key] is int)
+                {
+                    dropdown.value = (int)binder[key];
+                }
+                else
+                    Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
+            }
+        }
+        if (component is TMP_Dropdown)
+        {
+            var dropdown = component as TMP_Dropdown;
+            if ((DropDownBindingOption)bindingOption == DropDownBindingOption.dropdown_options)
+            {
+                dropdown.ClearOptions();
+
+                if (binder[key] is string[])
+                {
+                    string[] valueArray = binder[key] as string[];
+                    foreach (var bindedValue in valueArray)
+                    {
+                        dropdown.options.Add(new TMP_Dropdown.OptionData(bindedValue));
+                    }
+                }
+                else
+                    Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
+            }
+            else if ((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
+            {
+                if (binder[key] is int)
+                {
+                    dropdown.value = (int)binder[key];
+                }
+                else
+                    Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
+            }
+        }
+    }
+
+    private void UpdateInputFieldBinding(DataBinder binder)
+    {
+        if (component is InputField)
+        {
+            var txt = component as InputField;
+            if(binder[key] is string)
+            {
+                txt.text = binder[key].ToString();
             }
             else
-                Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
+                Debug.LogError($"Value for \"{key}\" does not contain a string value", this);
+        }
+        else if (component is TMP_InputField)
+        {
+            var txt = component as TMP_InputField;
+            if (binder[key] is string)
+            {
+                txt.text = binder[key].ToString();
+            }
+            else
+                Debug.LogError($"Value for \"{key}\" does not contain a string value", this);
         }
     }
     #endregion
@@ -293,6 +372,10 @@ public class BindableUI : BindableObj
     private void DropdownValueChanged(int value)
     {
         binderSource[key] = value;
+    }
+    private void InputFieldValueChanged(string text)
+    {
+        binderSource[key] = text;
     }
     #endregion
 }

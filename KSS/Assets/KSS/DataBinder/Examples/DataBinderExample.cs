@@ -9,10 +9,11 @@ public class DataBinderExample : MonoBehaviour
     private void Awake()
     {
         binder["Name"] = "Data Binder Example";
+        binder["InputField"] = "Data Binded Input";
         binder["Sprite"] = testSprite;
         binder["Texture"] = testTexture;
-        binder["Slider"] = 0.5f;
         binder["Toggle"] = false;
+        binder["Slider"] = 0.5f;
         binder["Dropdown"] = new string[] { "New", "options", "are here" };
         binder["Index"] = 0;
 
@@ -22,12 +23,14 @@ public class DataBinderExample : MonoBehaviour
         binder.GetKeyEvent("Toggle").AddListener(ToggleAction);
         binder.GetKeyEvent("Slider").AddListener(DoAction);
         binder.GetKeyEvent("Index").AddListener(DoAction);
+        binder.GetKeyEvent("InputField").AddListener(DoAction);
     }
     private void OnDestroy()
     {
         binder.GetKeyEvent("Toggle").RemoveListener(ToggleAction);
         binder.GetKeyEvent("Slider").RemoveListener(DoAction);
         binder.GetKeyEvent("Index").RemoveListener(DoAction);
+        binder.GetKeyEvent("InputField").RemoveListener(DoAction);
     }
     private void ToggleAction(object obj)
     {

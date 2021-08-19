@@ -38,13 +38,16 @@ public class BindableUIEditor : Editor
                 break;
             case Toggle toggle:
             case Slider slider:
+            case InputField input:
+            case TMP_InputField inputPro:
                 key = EditorGUILayout.TextField("Key", obj.key);
                 doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             case Dropdown dropDown:
-                key = EditorGUILayout.TextField("Key", obj.key);
+            case TMP_Dropdown dropdownPro:
                 bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
-                doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                key = EditorGUILayout.TextField("Key", obj.key);
+                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options)? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             default:
                 key = EditorGUILayout.TextField("Key", obj.key);
@@ -77,6 +80,9 @@ public class BindableUIEditor : Editor
             case Toggle toggle:
             case Slider slider:
             case Dropdown dropdown:
+            case TMP_Dropdown dropdownPro:
+            case InputField input:
+            case TMP_InputField inputPro:
                 return true;
             default:
                 return false;
