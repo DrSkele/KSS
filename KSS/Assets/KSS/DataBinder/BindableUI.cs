@@ -51,7 +51,6 @@ public class BindableUI : BindableObj
             for (int i = 0; i < matches.Count; i++)
             {
                 txtKeys[i] = matches[i].Value.Trim('{', '}');
-                Debug.Log(txtKeys[i]);
             }
         }
 

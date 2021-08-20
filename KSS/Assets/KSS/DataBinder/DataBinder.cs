@@ -51,6 +51,11 @@ public class DataBinder : Singleton<DataBinder>
     private Dictionary<string, BindedValue> bindedDatas = new Dictionary<string, BindedValue>();
     private HashSet<IBindableObj> bindables = new HashSet<IBindableObj>();
     public static List<AlwaysBindedObj> alwaysBinded = new List<AlwaysBindedObj>();
+
+    private void OnDestroy()
+    {
+        alwaysBinded = null;
+    }
     /// <summary>
     /// Gets / Sets value of the key.
     /// Updates binded value everytime on Set.
