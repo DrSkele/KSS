@@ -44,10 +44,17 @@ public class BindableUIEditor : Editor
                 doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             case Dropdown dropDown:
+                bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
+                key = EditorGUILayout.TextField("Key", obj.key);
+                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                break;
             case TMP_Dropdown dropdownPro:
                 bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
                 key = EditorGUILayout.TextField("Key", obj.key);
                 doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options)? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                if (bindingOption != DropDownBindingOption.dropdown_options)
+                    EditorGUILayout.HelpBox("TMP_Dropdown can't handle setting Index(or Name) and Dropdown options at the same time. " +
+                        "Recommended : 1.Add options manually in Editor. 2. Set Index(or Name) later at different timing(ex. options at Awake, index at Start).", MessageType.Warning);
                 break;
             default:
                 key = EditorGUILayout.TextField("Key", obj.key);

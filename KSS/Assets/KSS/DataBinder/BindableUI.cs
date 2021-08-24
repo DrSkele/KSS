@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public enum DropDownBindingOption { dropdown_options, index }
+public enum DropDownBindingOption { dropdown_options, index, name }
 /// <summary>
 /// DataBinding helper for <see cref="UIBehaviour"/> components.
 /// Currently supports Text, Image, Toggle, Slider, and Dropdown.
@@ -66,6 +66,9 @@ public class BindableUI : BindableObj
                     break;
                 case Dropdown dropdown:
                     dropdown.onValueChanged.AddListener(DropdownValueChanged);
+                    break;
+                case TMP_Dropdown dropPro:
+                    dropPro.onValueChanged.AddListener(DropdownValueChanged);
                     break;
                 case InputField input:
                     input.onEndEdit.AddListener(InputFieldValueChanged);
@@ -137,6 +140,8 @@ public class BindableUI : BindableObj
                         return typeof(string[]);
                     case DropDownBindingOption.index:
                         return typeof(int);
+                    case DropDownBindingOption.name:
+                        return typeof(string);
                 }
                 break;
             case InputField input:
@@ -152,12 +157,12 @@ public class BindableUI : BindableObj
 
         if (component is null)
         {
-            Debug.LogError($"Wrong component settings on object \"{this.name}\".", this);
+            Debug.LogWarning($"Wrong component settings on object \"{this.name}\".", this);
             return;
         }
         if (binder.ContainsKey(key) == false && !(component is Text || component is TMP_Text))
         {
-            Debug.LogError($"Key \"{key}\" on object \"{this.name}\" does not exist in DataBinder", this);
+            Debug.LogWarning($"Key \"{key}\" on object \"{this.name}\" does not exist in DataBinder", this);
             return;
         }
 
@@ -243,7 +248,7 @@ public class BindableUI : BindableObj
             if (binder[key] is Sprite)
                 image.sprite = binder[key] as Sprite;
             else
-                Debug.LogError($"Value for \"{key}\" does not contain a Sprite", this);
+                Debug.LogWarning($"Value for \"{key}\" does not contain a Sprite", this);
         }
         if(component is RawImage)
         {
@@ -251,7 +256,7 @@ public class BindableUI : BindableObj
             if (binder[key] is Texture)
                 image.texture = binder[key] as Texture;
             else
-                Debug.LogError($"Value for \"{key}\" does not contain a Texture", this);
+                Debug.LogWarning($"Value for \"{key}\" does not contain a Texture", this);
         }
     }
 
@@ -262,7 +267,7 @@ public class BindableUI : BindableObj
         if (binder[key] is bool)
             toggle.isOn = (bool)binder[key];
         else
-            Debug.LogError($"Value for \"{key}\" does not contain a boolean value", this);
+            Debug.LogWarning($"Value for \"{key}\" does not contain a boolean value", this);
     }
 
     private void UpdateSliderBinding(DataBinder binder)
@@ -272,7 +277,7 @@ public class BindableUI : BindableObj
         if (binder[key] is float)
             slider.value = (float)binder[key];
         else
-            Debug.LogError($"Value for \"{key}\" does not contain a float value", this);
+            Debug.LogWarning($"Value for \"{key}\" does not contain a float value", this);
     }
     private void UpdateDropdownBinding(DataBinder binder)
     {
@@ -292,7 +297,7 @@ public class BindableUI : BindableObj
                     }
                 }
                 else
-                    Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
+                    Debug.LogWarning($"Value for \"{key}\" does not contain a string array value", this);
             }
             else if ((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
             {
@@ -301,7 +306,20 @@ public class BindableUI : BindableObj
                     dropdown.value = (int)binder[key];
                 }
                 else
-                    Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
+                    Debug.LogWarning($"Value for \"{key}\" does not contain an int value", this);
+            }
+            else if((DropDownBindingOption)bindingOption == DropDownBindingOption.name)
+            {
+                if(binder[key] is string)
+                {
+                    int idx = dropdown.options.FindIndex(x => x.text == binder[key] as string);
+                    if (idx >= 0)
+                        dropdown.value = idx;
+                    else
+                        Debug.LogWarning($"Dropdown does not have option named \"{binder[key] as string}\"");
+                }
+                else
+                    Debug.LogWarning($"Value for \"{key}\" does not contain a string value", this);
             }
         }
         if (component is TMP_Dropdown)
@@ -320,7 +338,7 @@ public class BindableUI : BindableObj
                     }
                 }
                 else
-                    Debug.LogError($"Value for \"{key}\" does not contain a string array value", this);
+                    Debug.LogWarning($"Value for \"{key}\" does not contain a string array value", this);
             }
             else if ((DropDownBindingOption)bindingOption == DropDownBindingOption.index)
             {
@@ -329,7 +347,20 @@ public class BindableUI : BindableObj
                     dropdown.value = (int)binder[key];
                 }
                 else
-                    Debug.LogError($"Value for \"{key}\" does not contain an int value", this);
+                    Debug.LogWarning($"Value for \"{key}\" does not contain an int value", this);
+            }
+            else if ((DropDownBindingOption)bindingOption == DropDownBindingOption.name)
+            {
+                if (binder[key] is string)
+                {
+                    int idx = dropdown.options.FindIndex(x => x.text == binder[key] as string);
+                    if (idx >= 0)
+                        dropdown.value = idx;
+                    else
+                        Debug.LogWarning($"Dropdown does not have option named \"{binder[key] as string}\"", this);
+                }
+                else
+                    Debug.LogWarning($"Value for \"{key}\" does not contain a string value", this);
             }
         }
     }
@@ -344,7 +375,7 @@ public class BindableUI : BindableObj
                 txt.text = binder[key].ToString();
             }
             else
-                Debug.LogError($"Value for \"{key}\" does not contain a string value", this);
+                Debug.LogWarning($"Value for \"{key}\" does not contain a string value", this);
         }
         else if (component is TMP_InputField)
         {
@@ -354,7 +385,7 @@ public class BindableUI : BindableObj
                 txt.text = binder[key].ToString();
             }
             else
-                Debug.LogError($"Value for \"{key}\" does not contain a string value", this);
+                Debug.LogWarning($"Value for \"{key}\" does not contain a string value", this);
         }
     }
     #endregion
@@ -370,7 +401,21 @@ public class BindableUI : BindableObj
     }
     private void DropdownValueChanged(int value)
     {
-        binderSource[key] = value;
+        if(bindingOption == DropDownBindingOption.index)
+            binderSource[key] = value;
+        else
+        {
+            if(component is Dropdown)
+            {
+                var dropdown = component as Dropdown;
+                binderSource[key] = dropdown.options[value].text;
+            }
+            else if(component is TMP_Dropdown)
+            {
+                var dropdown = component as TMP_Dropdown;
+                binderSource[key] = dropdown.options[value].text;
+            }
+        }
     }
     private void InputFieldValueChanged(string text)
     {

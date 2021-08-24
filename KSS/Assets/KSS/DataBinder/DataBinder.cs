@@ -83,14 +83,14 @@ public class DataBinder : Singleton<DataBinder>
     /// </summary>
     public void AddToDataBinder(IBindableObj obj)
     {
-        bindables.Add(obj);
+        bindables?.Add(obj);
     }
     /// <summary>
     /// Register object to the databinder, so it can be updated when binded value changes.
     /// </summary>
     public static void AddToDataBinder(AlwaysBindedObj obj)
     {
-        alwaysBinded.Add(obj);
+        alwaysBinded?.Add(obj);
     }
     /// <summary>
     /// Removes object from the databinder, so it won't be updated anymore.
