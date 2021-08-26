@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// Value binded to the key.
@@ -62,7 +63,15 @@ public class DataBinder : Singleton<DataBinder>
     /// </summary>
     public object this[string key]
     {
-        get => bindedDatas[key].obj;
+        get 
+        {
+            if (ContainsKey(key) == false)
+            {
+                bindedDatas[key] = new BindedValue(null);
+            }
+
+            return bindedDatas[key].obj;
+        }
         set
         {
             if (bindedDatas == null)
