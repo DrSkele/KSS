@@ -20,17 +20,18 @@ public class DataBinderExample : MonoBehaviour
 
         binder["TurnOff"] = false;
         binder["TurnOn"] = false;
+        binder["BindableUI"] = true;
 
         binder.GetKeyEvent("Toggle").AddListener(ToggleAction);
         binder.GetKeyEvent("Slider").AddListener(DoAction);
         binder.GetKeyEvent("Index").AddListener(DoAction);
         binder.GetKeyEvent("Value").AddListener(DoAction);
         binder.GetKeyEvent("InputField").AddListener(DoAction);
+        
     }
     private void Start()
     {
-        binder["Index"] = 1;
-
+        //binder["Index"] = 1;
     }
     private void OnDestroy()
     {

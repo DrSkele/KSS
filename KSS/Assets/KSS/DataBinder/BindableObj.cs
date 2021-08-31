@@ -44,12 +44,18 @@ public abstract class BindableObj : MonoBehaviour, IBindableObj
 
     private void OnEnable()
     {
-        DataBinder.Instance.AddToDataBinder(this);
+        foreach (var key in GetKeys())
+        {
+            DataBinder.Instance.AddToDataBinder(key, this);
+        }
         UpdateDataBinding(DataBinder.Instance);
     }
     private void OnDisable()
     {
-        DataBinder.Instance.RemoveFromDataBinder(this);
+        foreach (var key in GetKeys())
+        {
+            DataBinder.Instance.RemoveFromDataBinder(key, this);
+        }
     }
 }
 /// <summary>

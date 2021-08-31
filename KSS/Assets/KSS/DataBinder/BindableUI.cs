@@ -41,7 +41,8 @@ public class BindableUI : BindableObj
 
     private void Start()
     {
-        component ??= GetComponents<Component>()[index];
+        if(component == null)
+            component = GetComponents<Component>()[index];
 
         if (component is Text || component is TMP_Text)
         {
@@ -152,7 +153,9 @@ public class BindableUI : BindableObj
     }
     public override void UpdateDataBinding(DataBinder binder)
     {
-        component ??= GetComponents<UIBehaviour>()[index];
+        if(component == null)
+            component = GetComponents<UIBehaviour>()[index];
+
         binderSource = binder;
 
         if (component is null)
@@ -291,10 +294,12 @@ public class BindableUI : BindableObj
                 if (binder[key] is string[])
                 {
                     string[] valueArray = binder[key] as string[];
+                    var newList = new Dropdown.OptionDataList();
                     foreach (var bindedValue in valueArray)
                     {
-                        dropdown.options.Add(new Dropdown.OptionData(bindedValue));
+                        newList.options.Add(new Dropdown.OptionData(bindedValue));
                     }
+                    dropdown.options = newList.options;
                 }
                 else
                     Debug.LogWarning($"Value for \"{key}\" does not contain a string array value", this);
@@ -332,10 +337,12 @@ public class BindableUI : BindableObj
                 if (binder[key] is string[])
                 {
                     string[] valueArray = binder[key] as string[];
+                    var newList = new TMP_Dropdown.OptionDataList();
                     foreach (var bindedValue in valueArray)
                     {
-                        dropdown.options.Add(new TMP_Dropdown.OptionData(bindedValue));
+                        newList.options.Add(new TMP_Dropdown.OptionData(bindedValue));
                     }
+                    dropdown.options = newList.options;
                 }
                 else
                     Debug.LogWarning($"Value for \"{key}\" does not contain a string array value", this);

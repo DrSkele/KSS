@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Linq;
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Value binded to the key.
@@ -30,14 +31,26 @@ public class BindedValue
     /// <summary>
     /// Callback for value changed event.
     /// </summary>
-    public UnityEvent<object> action;
+#if UNITY_2020_1_OR_NEWER
+    public UnityEvent<object>
+#else
+    [System.Serializable] public class UnityEvent_object : UnityEvent<object> { }
+    public UnityEvent_object
+#endif
+    action;
 
     public BindedValue() { }
     public BindedValue(object obj)
     {
         this.obj = obj;
         type = obj?.GetType();
-        action = new UnityEvent<object>();
+
+        action =
+#if UNITY_2020_1_OR_NEWER
+        new UnityEvent<object>();
+#else
+        new UnityEvent_object();
+#endif
     }
 }
 /// <summary>
@@ -50,13 +63,11 @@ public class DataBinder : Singleton<DataBinder>
     /// Dictionary for databinding.
     /// </summary>
     private Dictionary<string, BindedValue> bindedDatas = new Dictionary<string, BindedValue>();
-    private HashSet<IBindableObj> bindables = new HashSet<IBindableObj>();
+    private Dictionary<string, List<IBindableObj>> bindables = new Dictionary<string, List<IBindableObj>>();
     public static List<AlwaysBindedObj> alwaysBinded = new List<AlwaysBindedObj>();
 
-    private void OnDestroy()
-    {
-        alwaysBinded = null;
-    }
+    private Queue<string> toBeUpdated = new Queue<string>();
+
     /// <summary>
     /// Gets / Sets value of the key.
     /// Updates binded value everytime on Set.
@@ -84,15 +95,24 @@ public class DataBinder : Singleton<DataBinder>
             else
                 bindedDatas[key] = new BindedValue(value);
 
-            UpdateBindedValue(key);
+            ScheduleUpdate(key);
+        }
+    }
+    private void LateUpdate()
+    {
+        while (toBeUpdated.Count > 0)
+        {
+            UpdateBindedValue(toBeUpdated.Dequeue());
         }
     }
     /// <summary>
     /// Register object to the databinder, so it can be updated when binded value changes.
     /// </summary>
-    public void AddToDataBinder(IBindableObj obj)
+    public void AddToDataBinder(string key, IBindableObj obj)
     {
-        bindables?.Add(obj);
+        if (bindables.ContainsKey(key) == false)
+            bindables.Add(key, new List<IBindableObj>());
+        bindables[key].Add(obj);
     }
     /// <summary>
     /// Register object to the databinder, so it can be updated when binded value changes.
@@ -104,14 +124,15 @@ public class DataBinder : Singleton<DataBinder>
     /// <summary>
     /// Removes object from the databinder, so it won't be updated anymore.
     /// </summary>
-    public void RemoveFromDataBinder(IBindableObj obj, bool removeAllData = false)
+    public void RemoveFromDataBinder(string key, IBindableObj obj, bool removeAllData = false)
     {
-        bindables.Remove(obj);
+        if(bindables.ContainsKey(key))
+            bindables[key].Remove(obj);
         if (removeAllData)
         {
-            foreach (var key in obj.GetKeys())
+            foreach (var _key in obj.GetKeys())
             {
-                bindedDatas.Remove(key);
+                bindedDatas.Remove(_key);
             }
         }
     }
@@ -120,7 +141,7 @@ public class DataBinder : Singleton<DataBinder>
     /// </summary>
     public static void RemoveFromDataBinder(AlwaysBindedObj obj)
     {
-        alwaysBinded.Remove(obj);
+        alwaysBinded?.Remove(obj);
     }
     /// <summary>
     /// Check whether provided key exists.
@@ -158,18 +179,33 @@ public class DataBinder : Singleton<DataBinder>
         bindedDatas.Remove(key);
     }
     /// <summary>
+    /// Schedule value to be updated at certain timing.
+    /// </summary>
+    private void ScheduleUpdate(string key)
+    {
+        toBeUpdated.Enqueue(key);
+    }
+    /// <summary>
     /// Updates binded value of <see cref="IBindableObj"/> in child.
     /// </summary>
     private void UpdateBindedValue(string key)
     {
-        var updated = bindables.Concat(alwaysBinded?
-            .Where(bind => bind != null && bind.gameObject.scene.IsValid())?.Select(binded => binded as IBindableObj)
-            ?? new IBindableObj[] { }).ToArray();
-        foreach (var bindable in updated)
+        if (bindedDatas.ContainsKey(key))
         {
-            if (bindable.GetKeys().Any(x => string.IsNullOrEmpty(x)) || bindable.GetKeys().Any(x => x == key))
-                bindable.UpdateDataBinding(this);
+            if (bindables.ContainsKey(key))
+            {
+                foreach (var bindable in bindables[key])
+                {
+                    bindable.UpdateDataBinding(this);
+                }
+            }
+
+            var binds = alwaysBinded.Where(binded => binded != null && binded.gameObject.scene.IsValid());
+            foreach (var binded in binds)
+            {
+                if (binded.GetKeys().Any(x => string.IsNullOrEmpty(x) || x == key))
+                    binded.UpdateDataBinding(this);
+            }
         }
-        
     }
 }
