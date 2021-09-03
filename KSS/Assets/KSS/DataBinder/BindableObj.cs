@@ -52,6 +52,7 @@ public abstract class BindableObj : MonoBehaviour, IBindableObj
     }
     private void OnDisable()
     {
+        if (DataBinder.IsQuit) return;
         foreach (var key in GetKeys())
         {
             DataBinder.Instance.RemoveFromDataBinder(key, this);
@@ -80,6 +81,7 @@ public abstract class AlwaysBindedObj : MonoBehaviour, IBindableObj
     }
     ~AlwaysBindedObj()
     {
+        if (DataBinder.IsQuit) return;
         DataBinder.RemoveFromDataBinder(this);
     }
 }

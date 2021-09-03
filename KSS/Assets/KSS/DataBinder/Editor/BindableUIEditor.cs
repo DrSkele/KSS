@@ -7,6 +7,13 @@ using UnityEngine;
 [CustomEditor(typeof(BindableUI))]
 public class BindableUIEditor : Editor
 {
+    Component[] supportedComponents;
+    int index;
+    Component component;
+    string key = "";
+    string txtString = "";
+    bool doUpdateOnValueChanged = false;
+
     BindableUI obj = null;
 
     private void OnEnable()
@@ -20,16 +27,14 @@ public class BindableUIEditor : Editor
         
         serializedObject.Update();
 
-        var supportedComponents = obj.GetComponents<Component>().Where(x => MatchTypes(x));
+        supportedComponents = BindableUI.GetSupportedComponents(obj.gameObject).ToArray();
 
-        obj.index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
+        index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
+        component = supportedComponents.ToArray()[index];
 
-        string key = "";
-        string txtString = "";
-        bool doUpdateOnValueChanged = false;
         DropDownBindingOption bindingOption = DropDownBindingOption.dropdown_options;
 
-        switch (supportedComponents.ToArray()[obj.index])
+        switch (supportedComponents[obj.index])
         {
             case Text txt:
             case TMP_Text txtPro:
@@ -51,7 +56,7 @@ public class BindableUIEditor : Editor
             case TMP_Dropdown dropdownPro:
                 bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
                 key = EditorGUILayout.TextField("Key", obj.key);
-                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options)? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 if (bindingOption != DropDownBindingOption.dropdown_options)
                     EditorGUILayout.HelpBox("TMP_Dropdown can't handle setting Index(or Name) and Dropdown options at the same time. " +
                         "Recommended : 1.Add options manually in Editor. 2. Set Index(or Name) later at different timing(ex. options at Awake, index at Start).", MessageType.Warning);
@@ -60,39 +65,19 @@ public class BindableUIEditor : Editor
                 key = EditorGUILayout.TextField("Key", obj.key);
                 break;
         }
-
-        serializedObject.ApplyModifiedProperties();
         
-        if (EditorGUI.EndChangeCheck())
+        serializedObject.ApplyModifiedProperties();
+
+        if ((component != null && obj.component == null) || EditorGUI.EndChangeCheck())
         {
-            EditorUtility.SetDirty(target);
+            EditorUtility.SetDirty(obj);
             Undo.RegisterCompleteObjectUndo(obj, nameof(BindableUI) + " undo");
+            obj.component = component;
+            obj.index = index;
             obj.key = key;
             obj.txtString = txtString;
             obj.doUpdateOnValueChanged = doUpdateOnValueChanged;
             obj.bindingOption = bindingOption;
-        }
-    }
-    /// <summary>
-    /// Supported types of component
-    /// </summary>
-    private bool MatchTypes(Component obj)
-    {
-        switch (obj)
-        {
-            case Text txt:
-            case TMP_Text txtPro:
-            case Image img:
-            case RawImage imgRaw:
-            case Toggle toggle:
-            case Slider slider:
-            case Dropdown dropdown:
-            case TMP_Dropdown dropdownPro:
-            case InputField input:
-            case TMP_InputField inputPro:
-                return true;
-            default:
-                return false;
         }
     }
 }

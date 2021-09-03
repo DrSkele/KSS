@@ -8,6 +8,7 @@ public class DataBinderExample : MonoBehaviour
 
     private void Awake()
     {
+        binder["BindableUI"] = true;
         binder["Name"] = "Data Binder Example";
         binder["InputField"] = "Data Binded Input";
         binder["Sprite"] = testSprite;
@@ -20,7 +21,6 @@ public class DataBinderExample : MonoBehaviour
 
         binder["TurnOff"] = false;
         binder["TurnOn"] = false;
-        binder["BindableUI"] = true;
 
         binder.GetKeyEvent("Toggle").AddListener(ToggleAction);
         binder.GetKeyEvent("Slider").AddListener(DoAction);
@@ -35,6 +35,7 @@ public class DataBinderExample : MonoBehaviour
     }
     private void OnDestroy()
     {
+        if (DataBinder.IsQuit) return;
         binder.GetKeyEvent("Toggle").RemoveListener(ToggleAction);
         binder.GetKeyEvent("Slider").RemoveListener(DoAction);
         binder.GetKeyEvent("Index").RemoveListener(DoAction);

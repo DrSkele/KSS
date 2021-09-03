@@ -78,7 +78,7 @@ public class DataBinder : Singleton<DataBinder>
         {
             if (ContainsKey(key) == false)
             {
-                bindedDatas[key] = new BindedValue(null);
+                bindedDatas.Add(key, new BindedValue(null));
             }
 
             return bindedDatas[key].obj;
@@ -93,16 +93,9 @@ public class DataBinder : Singleton<DataBinder>
             if (ContainsKey(key))
                 bindedDatas[key].obj = value;
             else
-                bindedDatas[key] = new BindedValue(value);
+                bindedDatas.Add(key, new BindedValue(value));
 
-            ScheduleUpdate(key);
-        }
-    }
-    private void LateUpdate()
-    {
-        while (toBeUpdated.Count > 0)
-        {
-            UpdateBindedValue(toBeUpdated.Dequeue());
+            UpdateBindedValue(key);
         }
     }
     /// <summary>
@@ -177,13 +170,6 @@ public class DataBinder : Singleton<DataBinder>
     public void RemoveKey(string key)
     {
         bindedDatas.Remove(key);
-    }
-    /// <summary>
-    /// Schedule value to be updated at certain timing.
-    /// </summary>
-    private void ScheduleUpdate(string key)
-    {
-        toBeUpdated.Enqueue(key);
     }
     /// <summary>
     /// Updates binded value of <see cref="IBindableObj"/> in child.

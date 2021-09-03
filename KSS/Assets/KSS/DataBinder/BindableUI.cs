@@ -5,6 +5,7 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Linq;
 
 public enum DropDownBindingOption { dropdown_options, index, name }
 /// <summary>
@@ -17,7 +18,7 @@ public class BindableUI : BindableObj
     /// <summary>
     /// Binded UI component.
     /// </summary>
-    private Component component;
+    /*[HideInInspector]*/[SerializeField] public Component component;
     /// <summary>
     /// Invoked when value changed in <see cref="DataBinder"/>
     /// </summary>
@@ -39,10 +40,12 @@ public class BindableUI : BindableObj
     [HideInInspector]
     public int index;
 
-    private void Start()
+    private void Awake()
     {
         if(component == null)
-            component = GetComponents<Component>()[index];
+        {
+            component = GetSupportedComponents(gameObject)[index];
+        }
 
         if (component is Text || component is TMP_Text)
         {
@@ -154,7 +157,7 @@ public class BindableUI : BindableObj
     public override void UpdateDataBinding(DataBinder binder)
     {
         if(component == null)
-            component = GetComponents<UIBehaviour>()[index];
+            component = GetSupportedComponents(gameObject)[index];
 
         binderSource = binder;
 
@@ -429,4 +432,31 @@ public class BindableUI : BindableObj
         binderSource[key] = text;
     }
     #endregion
+
+    public static Component[] GetSupportedComponents(GameObject obj)
+    {
+        return obj.GetComponents<Component>().Where(x => MatchTypes(x)).ToArray();
+    }
+    /// <summary>
+    /// Supported types of component
+    /// </summary>
+    public static bool MatchTypes(Component obj)
+    {
+        switch (obj)
+        {
+            case Text txt:
+            case TMP_Text txtPro:
+            case Image img:
+            case RawImage imgRaw:
+            case Toggle toggle:
+            case Slider slider:
+            case Dropdown dropdown:
+            case TMP_Dropdown dropdownPro:
+            case InputField input:
+            case TMP_InputField inputPro:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

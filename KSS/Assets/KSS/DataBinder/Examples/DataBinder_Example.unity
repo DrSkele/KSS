@@ -535,6 +535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 
+  component: {fileID: 226347071}
   txtString: '{Name} is Value'
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -2251,6 +2252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Texture
+  component: {fileID: 870801015}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -2400,6 +2402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Sprite
+  component: {fileID: 892758562}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -2847,8 +2850,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1068816780}
   - component: {fileID: 1068816784}
-  - component: {fileID: 1068816786}
   - component: {fileID: 1068816783}
+  - component: {fileID: 1068816786}
   - component: {fileID: 1068816782}
   - component: {fileID: 1068816781}
   m_Layer: 5
@@ -2982,6 +2985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Dropdown
+  component: {fileID: 1068816781}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -3008,6 +3012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Index
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -3194,6 +3199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: InputField
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -3825,6 +3831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Slider
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -4430,6 +4437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Toggle
+  component: {fileID: 1427516544}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -4575,6 +4583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Index
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -4593,6 +4602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Dropdown
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -4961,7 +4971,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 
-  txtString: 'Name of this Example : {Name}'
+  component: {fileID: 1553780521}
+  txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
   bindingOption: 0
@@ -5061,6 +5072,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 
+  component: {fileID: 1604224243}
   txtString: '{Slider}'
   txtKeys: []
   doUpdateOnValueChanged: 0
@@ -6293,6 +6305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: InputField
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
@@ -6674,6 +6687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Value
+  component: {fileID: 0}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1

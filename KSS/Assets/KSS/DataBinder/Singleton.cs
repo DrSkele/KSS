@@ -10,6 +10,10 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 	{
 		get
 		{
+			if (IsQuit)
+			{
+				throw new System.ObjectDisposedException($"Instance was called when the application quit\nTo avoid error, add 'if ({typeof(T).Name}.IsQuit) return;'");
+			}
 			if (instance == null)
 			{
 				instance = FindObjectOfType<T>();
@@ -24,7 +28,18 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 		}
 	}
 
-    private void Awake()
+	public static bool IsQuit;
+
+	private void OnApplicationQuit()
+	{
+		IsQuit = true;
+	}
+	private void OnDestroy()
+	{
+		if (instance != null && instance == (this as T))
+			instance = null;
+	}
+	private void Awake()
     {
 		if (instance == null)
 		{
