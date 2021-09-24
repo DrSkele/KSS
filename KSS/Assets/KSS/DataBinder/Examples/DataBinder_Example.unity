@@ -266,7 +266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &180811810
 RectTransform:
   m_ObjectHideFlags: 0
@@ -282,6 +282,7 @@ RectTransform:
   - {fileID: 226347070}
   - {fileID: 1604224241}
   - {fileID: 892758560}
+  - {fileID: 1608590117}
   - {fileID: 870801014}
   - {fileID: 1427516543}
   - {fileID: 1314152530}
@@ -345,7 +346,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -539,7 +540,8 @@ MonoBehaviour:
   txtString: '{Name} is Value'
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!1 &262880157
 GameObject:
@@ -799,7 +801,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2197,7 +2199,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 180811810}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2256,7 +2258,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!1 &891457140
 GameObject:
@@ -2406,7 +2409,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!114 &892758562
 MonoBehaviour:
@@ -2876,7 +2880,7 @@ RectTransform:
   - {fileID: 1844099955}
   - {fileID: 1845415364}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2989,7 +2993,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 1
 --- !u!222 &1068816784
 CanvasRenderer:
@@ -3012,11 +3017,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Index
-  component: {fileID: 0}
+  component: {fileID: 1068816781}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 1
+  dropdownOption: 1
+  imageOption: 0
   index: 1
 --- !u!1 &1077134637
 GameObject:
@@ -3051,7 +3057,7 @@ RectTransform:
   m_Children:
   - {fileID: 840760482}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3199,11 +3205,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: InputField
-  component: {fileID: 0}
+  component: {fileID: 1077134639}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 1
 --- !u!222 &1077134642
 CanvasRenderer:
@@ -3760,7 +3767,7 @@ RectTransform:
   - {fileID: 1188922985}
   - {fileID: 454309859}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3835,7 +3842,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!1 &1317236023
 GameObject:
@@ -4369,7 +4377,7 @@ RectTransform:
   m_Children:
   - {fileID: 603854091}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4441,7 +4449,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!1 &1466035187
 GameObject:
@@ -4479,7 +4488,7 @@ RectTransform:
   - {fileID: 993498767}
   - {fileID: 1509219341}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4583,11 +4592,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Index
-  component: {fileID: 0}
+  component: {fileID: 1466035189}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 1
+  dropdownOption: 1
+  imageOption: 0
   index: 1
 --- !u!114 &1466035192
 MonoBehaviour:
@@ -4602,11 +4612,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Dropdown
-  component: {fileID: 0}
+  component: {fileID: 1466035189}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 1
 --- !u!222 &1466035193
 CanvasRenderer:
@@ -4975,7 +4986,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!222 &1553780523
 CanvasRenderer:
@@ -5076,7 +5088,8 @@ MonoBehaviour:
   txtString: '{Slider}'
   txtKeys: []
   doUpdateOnValueChanged: 0
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 0
 --- !u!114 &1604224243
 MonoBehaviour:
@@ -5119,6 +5132,102 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1604224240}
+  m_CullTransparentMesh: 1
+--- !u!1 &1608590116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608590117}
+  - component: {fileID: 1608590120}
+  - component: {fileID: 1608590119}
+  - component: {fileID: 1608590118}
+  m_Layer: 5
+  m_Name: FillImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1608590117
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608590116}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 180811810}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -481, y: 226}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1608590118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608590116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1608590119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608590116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: Fill
+  component: {fileID: 1608590118}
+  txtString: 
+  txtKeys: []
+  doUpdateOnValueChanged: 0
+  dropdownOption: 0
+  imageOption: 1
+  index: 0
+--- !u!222 &1608590120
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608590116}
   m_CullTransparentMesh: 1
 --- !u!1 &1616013957
 GameObject:
@@ -6190,7 +6299,7 @@ RectTransform:
   - {fileID: 1195920549}
   - {fileID: 427313880}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6309,7 +6418,8 @@ MonoBehaviour:
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 0
+  dropdownOption: 0
+  imageOption: 0
   index: 1
 --- !u!222 &1920411475
 CanvasRenderer:
@@ -6577,7 +6687,7 @@ RectTransform:
   - {fileID: 313746788}
   - {fileID: 1933147095}
   m_Father: {fileID: 180811810}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6687,11 +6797,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: Value
-  component: {fileID: 0}
+  component: {fileID: 1959764258}
   txtString: 
   txtKeys: []
   doUpdateOnValueChanged: 1
-  bindingOption: 2
+  dropdownOption: 2
+  imageOption: 0
   index: 1
 --- !u!222 &1959764261
 CanvasRenderer:

@@ -194,4 +194,13 @@ public class DataBinder : Singleton<DataBinder>
             }
         }
     }
+    public void ForceUpdate()
+    {
+        var binds = alwaysBinded.Where(binded => binded != null && binded.gameObject.scene.IsValid());
+        foreach (var binded in binds)
+        {
+            if (binded.GetKeys().Any(x => bindables.ContainsKey(x)))
+                binded.UpdateDataBinding(this);
+        }
+    }
 }

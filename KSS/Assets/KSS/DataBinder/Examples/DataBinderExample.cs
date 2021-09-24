@@ -12,6 +12,7 @@ public class DataBinderExample : MonoBehaviour
         binder["Name"] = "Data Binder Example";
         binder["InputField"] = "Data Binded Input";
         binder["Sprite"] = testSprite;
+        binder["Fill"] = 0.5f;
         binder["Texture"] = testTexture;
         binder["Toggle"] = false;
         binder["Slider"] = 0.5f;

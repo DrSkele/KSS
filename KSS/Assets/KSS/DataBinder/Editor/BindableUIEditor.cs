@@ -13,6 +13,8 @@ public class BindableUIEditor : Editor
     string key = "";
     string txtString = "";
     bool doUpdateOnValueChanged = false;
+    DropDownBindingOption dropdownOption = DropDownBindingOption.dropdown_options;
+    ImageBindingOption imageOption = ImageBindingOption.sprite;
 
     BindableUI obj = null;
 
@@ -32,7 +34,6 @@ public class BindableUIEditor : Editor
         index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
         component = supportedComponents.ToArray()[index];
 
-        DropDownBindingOption bindingOption = DropDownBindingOption.dropdown_options;
 
         switch (supportedComponents[obj.index])
         {
@@ -40,6 +41,10 @@ public class BindableUIEditor : Editor
             case TMP_Text txtPro:
                 txtString = EditorGUILayout.TextArea(obj.txtString, GUILayout.Height(50));
                 EditorGUILayout.HelpBox("To insert keys in Text, wrap a key with brackets {}, i.e. {key}", MessageType.Info);
+                break;
+            case Image image:
+                imageOption = (ImageBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.imageOption);
+                key = EditorGUILayout.TextField("Key", obj.key);
                 break;
             case Toggle toggle:
             case Slider slider:
@@ -49,17 +54,14 @@ public class BindableUIEditor : Editor
                 doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             case Dropdown dropDown:
-                bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
+                dropdownOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.dropdownOption);
                 key = EditorGUILayout.TextField("Key", obj.key);
-                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                doUpdateOnValueChanged = (dropdownOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             case TMP_Dropdown dropdownPro:
-                bindingOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.bindingOption);
+                dropdownOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.dropdownOption);
                 key = EditorGUILayout.TextField("Key", obj.key);
-                doUpdateOnValueChanged = (bindingOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
-                if (bindingOption != DropDownBindingOption.dropdown_options)
-                    EditorGUILayout.HelpBox("TMP_Dropdown can't handle setting Index(or Name) and Dropdown options at the same time. " +
-                        "Recommended : 1.Add options manually in Editor. 2. Set Index(or Name) later at different timing(ex. options at Awake, index at Start).", MessageType.Warning);
+                doUpdateOnValueChanged = (dropdownOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                 break;
             default:
                 key = EditorGUILayout.TextField("Key", obj.key);
@@ -77,7 +79,8 @@ public class BindableUIEditor : Editor
             obj.key = key;
             obj.txtString = txtString;
             obj.doUpdateOnValueChanged = doUpdateOnValueChanged;
-            obj.bindingOption = bindingOption;
+            obj.dropdownOption = dropdownOption;
+            obj.imageOption = imageOption;
         }
     }
 }
