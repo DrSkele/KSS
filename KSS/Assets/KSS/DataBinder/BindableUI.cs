@@ -34,8 +34,20 @@ public class BindableUI : BindableObj
     /// When true, user input changes binded value.
     /// </summary>
     public bool doUpdateOnValueChanged;
+
+    // Options for Dropdown UI
     public DropDownBindingOption dropdownOption;
+
+    //Options for Image UI
     public ImageBindingOption imageOption;
+
+    //Array for ToggleGroup
+    public Toggle[] groupedToggles;
+    public bool getChildToggle;
+
+    //Option for Slider UI
+    public int division;
+
     /// <summary>
     /// index of binded component.
     /// </summary>
@@ -60,10 +72,29 @@ public class BindableUI : BindableObj
             }
         }
 
+        if(getChildToggle)
+        {
+            groupedToggles = GetComponentsInChildren<Toggle>();
+        }
+        if(component is ToggleGroup && groupedToggles.Length > 0)
+        {
+            foreach (var tgl in groupedToggles)
+            {
+                tgl.group = component as ToggleGroup;
+            }
+        }
+
         if (doUpdateOnValueChanged)
         {
             switch (component)
             {
+                case ToggleGroup group:
+                    for (int i = 0; i < groupedToggles.Length; i++)
+                    {
+                        int j = i;
+                        groupedToggles[i].onValueChanged.AddListener(isOn => GroupedToggleValueChanged(isOn, j));
+                    }
+                    break;
                 case Toggle toggle:
                     toggle.onValueChanged.AddListener(ToggleValueChanged);
                     break;
@@ -89,6 +120,13 @@ public class BindableUI : BindableObj
     {
         switch (component)
         {
+            case ToggleGroup group:
+                for (int i = 0; i < groupedToggles.Length; i++)
+                {
+                    int j = i;
+                    groupedToggles[i].onValueChanged.RemoveListener(isOn => GroupedToggleValueChanged(isOn, j));
+                }
+                break;
             case Toggle toggle:
                     toggle.onValueChanged.RemoveListener(ToggleValueChanged);
                 break;
@@ -141,6 +179,8 @@ public class BindableUI : BindableObj
                 break;
             case RawImage imgRaw:
                 return typeof(Texture);
+            case ToggleGroup group:
+                return typeof(int);
             case Toggle toggle:
                 return typeof(bool);
             case Slider slider:
@@ -185,37 +225,28 @@ public class BindableUI : BindableObj
         {
             case Text txt:
             case TMP_Text txtPro:
-                {
-                    updater = UpdateTextBinding;
-                }
+                updater = UpdateTextBinding;
                 break;
             case Image img:
             case RawImage imgRaw:
-                {
-                    updater = UpdateImageBinding;
-                }
+                updater = UpdateImageBinding;
+                break;
+            case ToggleGroup group:
+                updater = UpdateToggleGroupBinding;
                 break;
             case Toggle toggle:
-                {
-                    updater = UpdateToggleBinding;
-                }
+                updater = UpdateToggleBinding;
                 break;
             case Slider slider:
-                {
-                    updater = UpdateSliderBinding;
-                }
+                updater = UpdateSliderBinding;
                 break;
             case Dropdown dropdown:
             case TMP_Dropdown dropdownPro:
-                {
-                    updater = UpdateDropdownBinding;
-                }
+                updater = UpdateDropdownBinding;
                 break;
             case InputField input:
             case TMP_InputField inputPro:
-                {
-                    updater = UpdateInputFieldBinding;
-                }
+                updater = UpdateInputFieldBinding;
                 break;
         }
 
@@ -284,7 +315,21 @@ public class BindableUI : BindableObj
                 Debug.LogWarning($"Value for \"{key}\" does not contain a Texture", this);
         }
     }
+    private void UpdateToggleGroupBinding(DataBinder binder)
+    {
+        var group = component as ToggleGroup;
 
+        if(binder[key] is int)
+        {
+            var idx = (int)binder[key];
+            if(idx < groupedToggles.Length)
+                groupedToggles[idx].isOn = true;
+            else 
+                Debug.LogWarning($"Value for \"{key}\" is out of index(Length : {groupedToggles.Length}).", this);
+        }
+        else
+            Debug.LogWarning($"Value for \"{key}\" does not contain an int value", this);
+    }
     private void UpdateToggleBinding(DataBinder binder)
     {
         var toggle = component as Toggle;
@@ -300,9 +345,20 @@ public class BindableUI : BindableObj
         var slider = component as Slider;
 
         if (binder[key] is float)
-            slider.value = (float)binder[key];
+        {
+            var value = (float)binder[key];
+            if (division > 0)
+            {
+                var snapTo = Mathf.RoundToInt(value * division);
+                slider.value = (float)snapTo / division;
+            }
+            else
+                slider.value = value;
+        }
+        else if (binder[key] is int)
+            slider.value = (int)binder[key];
         else
-            Debug.LogWarning($"Value for \"{key}\" does not contain a float value", this);
+            Debug.LogWarning($"Value for \"{key}\" does not contain float nor int value", this);
     }
     private void UpdateDropdownBinding(DataBinder binder)
     {
@@ -420,13 +476,24 @@ public class BindableUI : BindableObj
     #endregion
 
     #region BindedValueChangedListener
+    private void GroupedToggleValueChanged(bool isOn, int idx)
+    {
+        if(isOn)
+            binderSource[key] = idx;
+    }
     private void ToggleValueChanged(bool isOn)
     {
         binderSource[key] = isOn;
     }
     private void SliderValueChanged(float value)
     {
-        binderSource[key] = value;
+        if (division > 0)
+        {
+            var snapTo = Mathf.RoundToInt(value * division);
+            binderSource[key] = (float)snapTo / division;
+        }
+        else
+            binderSource[key] = value;
     }
     private void DropdownValueChanged(int value)
     {
@@ -467,6 +534,7 @@ public class BindableUI : BindableObj
             case TMP_Text txtPro:
             case Image img:
             case RawImage imgRaw:
+            case ToggleGroup group:
             case Toggle toggle:
             case Slider slider:
             case Dropdown dropdown:

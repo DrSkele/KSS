@@ -8,18 +8,29 @@ public class DataBinderExample : MonoBehaviour
 
     private void Awake()
     {
+        //bindable activator
         binder["BindableUI"] = true;
+        //text
         binder["Name"] = "Data Binder Example";
+        //inputfield
         binder["InputField"] = "Data Binded Input";
+        //image
         binder["Sprite"] = testSprite;
         binder["Fill"] = 0.5f;
+        //raw image
         binder["Texture"] = testTexture;
+        //toggle group
+        binder["Group"] = 1;
+        //toggle
         binder["Toggle"] = false;
-        binder["Slider"] = 0.5f;
+        //slider
+        binder["Slider"] = 0.55f;
+        //dropdown
         binder["Dropdown"] = new string[] { "New", "options", "are here" };
         binder["Index"] = 1;
         binder["Value"] = "options";
-
+        
+        //bindable activator
         binder["TurnOff"] = false;
         binder["TurnOn"] = false;
 
@@ -27,6 +38,7 @@ public class DataBinderExample : MonoBehaviour
         binder.GetKeyEvent("Slider").AddListener(DoAction);
         binder.GetKeyEvent("Index").AddListener(DoAction);
         binder.GetKeyEvent("Value").AddListener(DoAction);
+        binder.GetKeyEvent("Group").AddListener(DoAction);
         binder.GetKeyEvent("InputField").AddListener(DoAction);
         
     }

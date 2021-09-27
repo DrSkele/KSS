@@ -15,6 +15,9 @@ public class BindableUIEditor : Editor
     bool doUpdateOnValueChanged = false;
     DropDownBindingOption dropdownOption = DropDownBindingOption.dropdown_options;
     ImageBindingOption imageOption = ImageBindingOption.sprite;
+    Toggle[] groupedToggles;
+    bool getChildToggle = true;
+    int division = 0;
 
     BindableUI obj = null;
 
@@ -34,7 +37,6 @@ public class BindableUIEditor : Editor
         index = EditorGUILayout.Popup("Component", obj.index, supportedComponents.Select(comp => $"({comp.GetType()})").ToArray());
         component = supportedComponents.ToArray()[index];
 
-
         switch (supportedComponents[obj.index])
         {
             case Text txt:
@@ -46,8 +48,22 @@ public class BindableUIEditor : Editor
                 imageOption = (ImageBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.imageOption);
                 key = EditorGUILayout.TextField("Key", obj.key);
                 break;
-            case Toggle toggle:
+            case ToggleGroup group:
+                key = EditorGUILayout.TextField("Key", obj.key);
+                doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                getChildToggle = EditorGUILayout.Toggle(new GUIContent("Get Toggles From Children", "If checked, gets toggles from children on Awake"), obj.getChildToggle);
+                if(!getChildToggle)
+                {
+                    var property = serializedObject.FindProperty(nameof(obj.groupedToggles));
+                    EditorGUILayout.PropertyField(property, new GUIContent("Toggles"), true);
+                }
+                break;
             case Slider slider:
+                key = EditorGUILayout.TextField("Key", obj.key);
+                doUpdateOnValueChanged = EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
+                division = EditorGUILayout.IntSlider(new GUIContent("Division", "Number of sections for slider"), obj.division, 0, 100);
+                break;
+            case Toggle toggle:
             case InputField input:
             case TMP_InputField inputPro:
                 key = EditorGUILayout.TextField("Key", obj.key);
@@ -79,8 +95,10 @@ public class BindableUIEditor : Editor
             obj.key = key;
             obj.txtString = txtString;
             obj.doUpdateOnValueChanged = doUpdateOnValueChanged;
+            obj.getChildToggle = getChildToggle;
             obj.dropdownOption = dropdownOption;
             obj.imageOption = imageOption;
+            obj.division = division;
         }
     }
 }
