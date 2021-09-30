@@ -6,7 +6,7 @@ public class DataBinderExample : MonoBehaviour
     public Texture testTexture;
     DataBinder binder => DataBinder.Instance;
 
-    private void Awake()
+    private void OnEnable()
     {
         //bindable activator
         binder["BindableUI"] = true;
@@ -58,6 +58,7 @@ public class DataBinderExample : MonoBehaviour
     private void ToggleAction(object obj)
     {
         binder["TurnOn"] = (bool)obj;
+        binder["Interactable"] = (bool)obj;
     }
     private void DoAction(object obj)
     {

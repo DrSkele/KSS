@@ -199,7 +199,7 @@ public class DataBinder : Singleton<DataBinder>
         var binds = alwaysBinded.Where(binded => binded != null && binded.gameObject.scene.IsValid());
         foreach (var binded in binds)
         {
-            if (binded.GetKeys().Any(x => bindables.ContainsKey(x)))
+            if (binded.GetKeys().Any(x => bindedDatas.ContainsKey(x)))
                 binded.UpdateDataBinding(this);
         }
     }
