@@ -8,10 +8,11 @@ public class AnimationEventControllerEditor : Editor
 {
     AnimationEventController controller = null;
 
+    int index;
+    AnimatorControllerParameter parameter;
     private void OnEnable()
     {
         controller = (AnimationEventController)target;
-        controller.animator = controller.GetComponent<Animator>();
 
         if (controller.animator == null)
         {
@@ -23,22 +24,26 @@ public class AnimationEventControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         EditorGUI.BeginChangeCheck();
-        {
-            serializedObject.Update();
+        
+        serializedObject.Update();
 
-            GUIContent title = new GUIContent("Parameters");
+        GUIContent title = new GUIContent("Parameters");
 
-            var animatorController = controller.animator.runtimeAnimatorController as AnimatorController;
+        var animatorController = controller.animator.runtimeAnimatorController as AnimatorController;
 
-            var parameters = animatorController.parameters;
+        var parameters = animatorController.parameters;
 
-            controller.index = EditorGUILayout.Popup(title, controller.index, parameters.Select(param => param.name + $"({param.type})").ToArray());
+        index = EditorGUILayout.Popup(title, controller.index, parameters.Select(param => param.name + $"({param.type})").ToArray());
+        parameter = controller.animator.parameters[index];
 
-            serializedObject.ApplyModifiedProperties();
-        }
-        if (EditorGUI.EndChangeCheck())
+        serializedObject.ApplyModifiedProperties();
+        
+        if ((parameter != null && controller.parameter == null) || EditorGUI.EndChangeCheck())
         {
             EditorUtility.SetDirty(target);
+            Undo.RegisterCompleteObjectUndo(controller, nameof(AnimationEventController) + " undo");
+            controller.index = index;
+            controller.parameter = parameter;
         }
     }
 }

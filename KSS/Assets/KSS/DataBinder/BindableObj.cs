@@ -55,7 +55,7 @@ public abstract class BindableObj : MonoBehaviour, IBindableObj
         if (DataBinder.IsQuit) return;
         foreach (var key in GetKeys())
         {
-            DataBinder.Instance.RemoveFromDataBinder(key, this);
+            DataBinder.Instance?.RemoveFromDataBinder(key, this);
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Singleton<T> : MonoBehaviour where T : Component
 {
+	private static object threadLock = new object();
 	private static T instance;
 
 	public static T Instance
@@ -12,16 +13,19 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 		{
 			if (IsQuit)
 			{
-				throw new System.ObjectDisposedException($"Instance was called when the application quit\nTo avoid error, add 'if ({typeof(T).Name}.IsQuit) return;'");
+				return null;
 			}
-			if (instance == null)
+			lock (threadLock)
 			{
-				instance = FindObjectOfType<T>();
 				if (instance == null)
 				{
-					GameObject obj = new GameObject();
-					obj.name = typeof(T).Name;
-					instance = obj.AddComponent<T>();
+					instance = FindObjectOfType<T>();
+					if (instance == null)
+					{
+						GameObject obj = new GameObject();
+						obj.name = typeof(T).Name;
+						instance = obj.AddComponent<T>();
+					}
 				}
 			}
 			return instance;
@@ -40,7 +44,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 			instance = null;
 	}
 	private void Awake()
-    {
+	{
 		if (instance == null || instance == this)
 		{
 			instance = this as T;
@@ -52,10 +56,10 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
 		}
 
 		_Awake();
-    }
+	}
 
-    protected virtual void _Awake()
+	protected virtual void _Awake()
 	{
-		
+
 	}
 }

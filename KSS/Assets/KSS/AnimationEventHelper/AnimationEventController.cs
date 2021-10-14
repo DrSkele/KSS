@@ -7,22 +7,28 @@ using UnityEngine;
 /// </summary>
 public class AnimationEventController : MonoBehaviour
 {
-    [HideInInspector] 
-    public Animator animator;
+    private Animator _animator;
+    public Animator animator
+    {
+        get
+        {
+            if (_animator == null)
+                _animator = GetComponent<Animator>();
+            return _animator;
+        }
+    }
     [HideInInspector]
     public int index;
-    
-    AnimatorControllerParameter parameter;
 
+    [SerializeField] public AnimatorControllerParameter parameter;
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        parameter = animator.parameters[index];
+        if (parameter == null)
+            parameter = animator.parameters[index];
     }
 
     public void SetBool(bool isOn)
     {
-        Debug.Log(index);
         if (parameter.type == AnimatorControllerParameterType.Bool)
             animator.SetBool(parameter.name, isOn);
         else

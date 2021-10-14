@@ -48,12 +48,12 @@ public class DataBinderExample : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (DataBinder.IsQuit) return;
-        binder.GetKeyEvent("Toggle").RemoveListener(ToggleAction);
-        binder.GetKeyEvent("Slider").RemoveListener(DoAction);
-        binder.GetKeyEvent("Index").RemoveListener(DoAction);
-        binder.GetKeyEvent("Value").RemoveListener(DoAction);
-        binder.GetKeyEvent("InputField").RemoveListener(DoAction);
+        //if (DataBinder.IsQuit) return;
+        binder?.GetKeyEvent("Toggle").RemoveListener(ToggleAction);
+        binder?.GetKeyEvent("Slider").RemoveListener(DoAction);
+        binder?.GetKeyEvent("Index").RemoveListener(DoAction);
+        binder?.GetKeyEvent("Value").RemoveListener(DoAction);
+        binder?.GetKeyEvent("InputField").RemoveListener(DoAction);
     }
     private void ToggleAction(object obj)
     {
