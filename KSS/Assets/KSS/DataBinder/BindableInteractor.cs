@@ -4,72 +4,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Selectable))]
-public class BindableInteractor : BindableObj
+namespace KSS.DataBind
 {
-    Selectable _selectable;
-    Selectable selectableComponent
+    [RequireComponent(typeof(Selectable))]
+    public class BindableInteractor : BindableObj
     {
-        get
+        Selectable _selectable;
+        Selectable selectableComponent
         {
-            if(_selectable == null)
+            get
             {
-                _selectable = GetComponent<Selectable>();
+                if (_selectable == null)
+                {
+                    _selectable = GetComponent<Selectable>();
+                }
+                return _selectable;
             }
-            return _selectable;
         }
-    }
-    [SerializeField] string _key;
-    public string key
-    {
-        get
+        [SerializeField] string _key;
+        public string key
         {
-            if (useNameAsKey)
-                return this.gameObject.name;
-            if (_key == null)
-                return string.Empty;
-            return _key;
-        }
-        set
-        {
-            _key = value;
-        }
-    }
-
-    public bool useNameAsKey = true;
-
-    public override string GetAttachedObject()
-    {
-        return this.gameObject.name;
-    }
-
-    public override string GetBindedComponent()
-    {
-        return selectableComponent.name;
-    }
-
-    public override string[] GetKeys()
-    {
-        return new[] { key };
-    }
-
-    public override Type GetRequiredType()
-    {
-        return typeof(bool);
-    }
-
-    public override void UpdateDataBinding(DataBinder binder)
-    {
-        if(binder.ContainsKey(key))
-        {
-            if(binder.GetValueType(key) == typeof(bool))
+            get
             {
-                selectableComponent.interactable = (bool)binder[key];
+                if (useNameAsKey)
+                    return this.gameObject.name;
+                if (_key == null)
+                    return string.Empty;
+                return _key;
+            }
+            set
+            {
+                _key = value;
+            }
+        }
+
+        public bool useNameAsKey = true;
+
+        public override string GetAttachedObject()
+        {
+            return this.gameObject.name;
+        }
+
+        public override string GetBindedComponent()
+        {
+            return selectableComponent.name;
+        }
+
+        public override string[] GetKeys()
+        {
+            return new[] { key };
+        }
+
+        public override Type GetRequiredType()
+        {
+            return typeof(bool);
+        }
+
+        public override void UpdateDataBinding(DataBinder binder)
+        {
+            if (binder.ContainsKey(key))
+            {
+                if (binder.GetValueType(key) == typeof(bool))
+                {
+                    selectableComponent.interactable = (bool)binder[key];
+                }
+                else
+                    Debug.LogWarning($"Key \"{key}\" on object {this.name} does not contain a bool value", this);
             }
             else
-                Debug.LogWarning($"Key \"{key}\" on object {this.name} does not contain a bool value", this);
+                Debug.LogWarning($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
         }
-        else
-            Debug.LogWarning($"Key \"{key}\" on object {this.name} does not exist in DataBinder", this);
     }
 }

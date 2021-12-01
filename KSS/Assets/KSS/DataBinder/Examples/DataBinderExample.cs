@@ -1,4 +1,5 @@
 using UnityEngine;
+using KSS.DataBind;
 
 public class DataBinderExample : MonoBehaviour
 {
@@ -40,7 +41,6 @@ public class DataBinderExample : MonoBehaviour
         binder.GetKeyEvent("Value").AddListener(DoAction);
         binder.GetKeyEvent("Group").AddListener(DoAction);
         binder.GetKeyEvent("InputField").AddListener(DoAction);
-        
     }
     private void Start()
     {

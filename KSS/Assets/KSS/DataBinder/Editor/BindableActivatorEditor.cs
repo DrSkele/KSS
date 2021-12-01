@@ -1,34 +1,36 @@
 using UnityEditor;
 using UnityEngine;
-
-[CustomEditor(typeof(BindableActivator))]
-public class BindableActivatorEditor : Editor
+namespace KSS.DataBind
 {
-    BindableActivator activator;
-
-    private void OnEnable()
+    [CustomEditor(typeof(BindableActivator))]
+    public class BindableActivatorEditor : Editor
     {
-        activator = (BindableActivator)target;
-    }
-    public override void OnInspectorGUI()
-    {
-        EditorGUI.BeginChangeCheck();
-        
-        serializedObject.Update();
+        BindableActivator activator;
 
-        bool userNameAsKey = EditorGUILayout.Toggle(new GUIContent("UseNameAsKey", "Use attached gameobject's name as key"), activator.useNameAsKey);
-        string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", activator.key);
-        
-        EditorGUILayout.HelpBox("True : activates \nFalse : deactivates", MessageType.Info);
-
-        serializedObject.ApplyModifiedProperties();
-        
-        if(EditorGUI.EndChangeCheck())
+        private void OnEnable()
         {
-            EditorUtility.SetDirty(target);
-            Undo.RegisterCompleteObjectUndo(activator, nameof(BindableActivator) + " undo");
-            activator.useNameAsKey = userNameAsKey;
-            activator.key = key;
+            activator = (BindableActivator)target;
+        }
+        public override void OnInspectorGUI()
+        {
+            EditorGUI.BeginChangeCheck();
+
+            serializedObject.Update();
+
+            bool userNameAsKey = EditorGUILayout.Toggle(new GUIContent("UseNameAsKey", "Use attached gameobject's name as key"), activator.useNameAsKey);
+            string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", activator.key);
+
+            EditorGUILayout.HelpBox("True : activates \nFalse : deactivates", MessageType.Info);
+
+            serializedObject.ApplyModifiedProperties();
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(target);
+                Undo.RegisterCompleteObjectUndo(activator, nameof(BindableActivator) + " undo");
+                activator.useNameAsKey = userNameAsKey;
+                activator.key = key;
+            }
         }
     }
 }

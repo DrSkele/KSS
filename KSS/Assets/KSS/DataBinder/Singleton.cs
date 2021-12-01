@@ -2,64 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Singleton<T> : MonoBehaviour where T : Component
+namespace KSS
 {
-	private static object threadLock = new object();
-	private static T instance;
-
-	public static T Instance
+	public abstract class Singleton<T> : MonoBehaviour where T : Component
 	{
-		get
+		private static object threadLock = new object();
+		private static T instance;
+
+		public static T Instance
 		{
-			if (IsQuit)
+			get
 			{
-				return null;
-			}
-			lock (threadLock)
-			{
-				if (instance == null)
+				if (IsQuit)
 				{
-					instance = FindObjectOfType<T>();
+					return null;
+				}
+				lock (threadLock)
+				{
 					if (instance == null)
 					{
-						GameObject obj = new GameObject();
-						obj.name = typeof(T).Name;
-						instance = obj.AddComponent<T>();
+						instance = FindObjectOfType<T>();
+						if (instance == null)
+						{
+							GameObject obj = new GameObject();
+							obj.name = typeof(T).Name;
+							instance = obj.AddComponent<T>();
+						}
 					}
 				}
+				return instance;
 			}
-			return instance;
 		}
-	}
 
-	public static bool IsQuit;
+		public static bool IsQuit;
 
-	private void OnApplicationQuit()
-	{
-		IsQuit = true;
-	}
-	private void OnDestroy()
-	{
-		if (instance != null && instance == (this as T))
-			instance = null;
-	}
-	private void Awake()
-	{
-		if (instance == null || instance == this)
+		private void OnApplicationQuit()
 		{
-			instance = this as T;
-			DontDestroyOnLoad(gameObject);
+			IsQuit = true;
 		}
-		else
+		private void OnDestroy()
 		{
-			Destroy(gameObject);
+			if (instance != null && instance == (this as T))
+				instance = null;
+		}
+		private void Awake()
+		{
+			if (instance == null || instance == this)
+			{
+				instance = this as T;
+				DontDestroyOnLoad(gameObject);
+			}
+			else
+			{
+				Destroy(gameObject);
+			}
+
+			_Awake();
 		}
 
-		_Awake();
-	}
+		protected virtual void _Awake()
+		{
 
-	protected virtual void _Awake()
-	{
-
+		}
 	}
 }
