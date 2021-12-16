@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using KSS.UIBind; 
+using KSS.UIFind; 
 public class UIManagerExample : MonoBehaviour
 {
-    UIBinder binder = new UIBinder();
+    UIFinder binder = new UIFinder();
 
     private void Test()
     {
-        if(binder.GetBindedComponent("key", typeof(Text), out Text text))
-        {
-
-        }
+        binder.FindComponent("key", out Text text);
     }
 }

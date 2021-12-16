@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace KSS.UIBind
+namespace KSS.UIFind
 {
     public interface IBindableUI
     {
@@ -16,11 +16,11 @@ namespace KSS.UIBind
 
         private void OnEnable()
         {
-            UIBinder.Instance.RegisterComponent(key, comp);
+            UIFinder.Instance.RegisterComponent(key, comp);
         }
         private void OnDisable()
         {
-            UIBinder.Instance.UnregisterComponent(key);
+            UIFinder.Instance.UnregisterComponent(key);
         }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace KSS.UIBind
+namespace KSS.UIFind
 {
-    public class UIBinder : Singleton<UIBinder>
+    public class UIFinder : Singleton<UIFinder>
     {
         Dictionary<string, object> dic = new Dictionary<string, object>();
 
@@ -17,11 +17,11 @@ namespace KSS.UIBind
         {
             dic.Remove(key);
         }
-        public bool GetBindedComponent<T>(string key, Type type, out T component) where T : Component
+        public bool FindComponent<T>(string key, out T component) where T : Component
         {
             if (dic.ContainsKey(key))
             {
-                if (dic[key].GetType() == type)
+                if (dic[key].GetType() == typeof(T))
                 {
                     component = (T)dic[key];
                     return true;
