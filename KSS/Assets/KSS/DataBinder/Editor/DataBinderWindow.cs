@@ -14,11 +14,10 @@ namespace KSS.DataBind
         BindedTreeView view;
         private void OnEnable()
         {
-            view = new BindedTreeView(null, new TreeViewState());
+            view = new BindedTreeView(GetBindableObjsInScene(), new TreeViewState());
         }
         private void OnGUI()
         {
-            var objs = GetBindableObjsInScene();
             Rect rect = GUILayoutUtility.GetRect(0, 100000, 0, 100000);
             view.OnGUI(rect);
         }
@@ -72,7 +71,13 @@ namespace KSS.DataBind
             root.AddChild(bindableObj);
             root.AddChild(alwaysBindedObj);
 
-
+            foreach (var obj in objs)
+            {
+                if (obj is BindableObj)
+                    bindableObj.AddChild(new TreeViewItem { id = uniqueId++, depth = 1, displayName = obj.GetAttachedObject() });
+                else if (obj is AlwaysBindedObj)
+                    bindableObj.AddChild(new TreeViewItem { id = uniqueId++, depth = 1, displayName = obj.GetAttachedObject() });
+            }
 
             return root;
         }
