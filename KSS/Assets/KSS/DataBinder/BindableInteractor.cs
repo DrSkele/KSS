@@ -50,9 +50,9 @@ namespace KSS.DataBind
             return selectableComponent.name;
         }
 
-        public override string[] GetKeys()
+        public override string GetKey()
         {
-            return new[] { key };
+            return key;
         }
 
         public override Type GetRequiredType()

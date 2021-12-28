@@ -124,10 +124,7 @@ namespace KSS.DataBind
                 bindables[key].Remove(obj);
             if (removeAllData)
             {
-                foreach (var _key in obj.GetKeys())
-                {
-                    bindedDatas.Remove(_key);
-                }
+                bindedDatas.Remove(obj.GetKey());
             }
         }
         /// <summary>
@@ -190,7 +187,7 @@ namespace KSS.DataBind
                 var binds = alwaysBinded.Where(binded => binded != null && binded.gameObject.scene.IsValid());
                 foreach (var binded in binds)
                 {
-                    if (binded.GetKeys().Any(x => string.IsNullOrEmpty(x) || x == key))
+                    if (binded.GetKey() == key)
                         binded.UpdateDataBinding(this);
                 }
             }
@@ -200,7 +197,7 @@ namespace KSS.DataBind
             var binds = alwaysBinded.Where(binded => binded != null && binded.gameObject.scene.IsValid());
             foreach (var binded in binds)
             {
-                if (binded.GetKeys().Any(x => bindedDatas.ContainsKey(x)))
+                if (bindedDatas.ContainsKey(binded.GetKey()))
                     binded.UpdateDataBinding(this);
             }
         }

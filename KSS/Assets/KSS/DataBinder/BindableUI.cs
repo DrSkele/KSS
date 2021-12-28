@@ -29,9 +29,6 @@ namespace KSS.DataBind
         public delegate void DataBindUpdater(DataBinder binder);
         private DataBinder binderSource;
 
-        public string txtString;
-        public string[] txtKeys;
-
         /// <summary>
         /// When true, user input changes binded value.
         /// </summary>
@@ -63,16 +60,16 @@ namespace KSS.DataBind
                 component = GetSupportedComponents(gameObject)[index];
             }
 
-            if (component is Text || component is TMP_Text)
-            {
-                string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
-                var matches = Regex.Matches(txtString, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
-                txtKeys = new string[matches.Count];
-                for (int i = 0; i < matches.Count; i++)
-                {
-                    txtKeys[i] = matches[i].Value.Trim('{', '}');
-                }
-            }
+            //if (component is Text || component is TMP_Text)
+            //{
+            //    string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
+            //    var matches = Regex.Matches(txtString, pattern, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            //    txtKeys = new string[matches.Count];
+            //    for (int i = 0; i < matches.Count; i++)
+            //    {
+            //        txtKeys[i] = matches[i].Value.Trim('{', '}');
+            //    }
+            //}
 
             if (getChildToggle)
             {
@@ -151,9 +148,9 @@ namespace KSS.DataBind
         }
 
         #region IBindableObjFeature
-        public override string[] GetKeys()
+        public override string GetKey()
         {
-            return component is Text || component is TMP_Text ? txtKeys : new string[] { key };
+            return key;
         }
         public override string GetAttachedObject()
         {
@@ -264,28 +261,28 @@ namespace KSS.DataBind
         /// </summary>
         private void UpdateTextBinding(DataBinder binder)
         {
-            string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
-            string replacedText = Regex.Replace(txtString, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            //string pattern = @"\{[^}]*}"; //ex. "This is {key}" => "{key}";
+            //string replacedText = Regex.Replace(txtString, pattern, KeyExtractor, RegexOptions.None, TimeSpan.FromSeconds(0.25f));
+            //string KeyExtractor(Match match)
+            //{
+            //    string matchValue = match.Value.Trim('{', '}');
+            //    if (binder.ContainsKey(matchValue))// && binder.GetValueType(matchValue) == typeof(string))
+            //        return binder[matchValue].ToString();
+
+            //    return match.Value;
+            //}
 
             if (component is Text)
             {
                 var txt = component as Text;
-                txt.text = replacedText;
+                txt.text = (string)binder[key];
             }
             else if (component is TMP_Text)
             {
                 var txt = component as TMP_Text;
-                txt.text = replacedText;
+                txt.text = (string)binder[key];
             }
 
-            string KeyExtractor(Match match)
-            {
-                string matchValue = match.Value.Trim('{', '}');
-                if (binder.ContainsKey(matchValue))// && binder.GetValueType(matchValue) == typeof(string))
-                    return binder[matchValue].ToString();
-
-                return match.Value;
-            }
         }
 
         private void UpdateImageBinding(DataBinder binder)

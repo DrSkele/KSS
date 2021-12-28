@@ -10,7 +10,7 @@ namespace KSS.DataBind
         /// <summary>
         /// Get keys of this Obj. Usually there's only one key, but varies with implemented object.
         /// </summary>
-        string[] GetKeys();
+        string GetKey();
         /// <summary>
         /// Get name of object attached to.
         /// </summary>
@@ -37,7 +37,7 @@ namespace KSS.DataBind
     /// </summary>
     public abstract class BindableObj : MonoBehaviour, IBindableObj
     {
-        public abstract string[] GetKeys();
+        public abstract string GetKey();
         public abstract string GetAttachedObject();
         public abstract string GetBindedComponent();
         public abstract Type GetRequiredType();
@@ -45,19 +45,13 @@ namespace KSS.DataBind
 
         private void OnEnable()
         {
-            foreach (var key in GetKeys())
-            {
-                DataBinder.Instance.AddToDataBinder(key, this);
-            }
+            DataBinder.Instance.AddToDataBinder(GetKey(), this);
             UpdateDataBinding(DataBinder.Instance);
         }
         private void OnDisable()
         {
             if (DataBinder.IsQuit) return;
-            foreach (var key in GetKeys())
-            {
-                DataBinder.Instance?.RemoveFromDataBinder(key, this);
-            }
+            DataBinder.Instance?.RemoveFromDataBinder(GetKey(), this);
         }
     }
     /// <summary>
@@ -67,7 +61,7 @@ namespace KSS.DataBind
     /// </summary>
     public abstract class AlwaysBindedObj : MonoBehaviour, IBindableObj
     {
-        public abstract string[] GetKeys();
+        public abstract string GetKey();
         public abstract string GetAttachedObject();
         public abstract string GetBindedComponent();
         public abstract Type GetRequiredType();
