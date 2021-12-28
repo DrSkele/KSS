@@ -12,7 +12,6 @@ namespace KSS.DataBind
         int index;
         Component component;
         string key = "";
-        string txtString = "";
         bool doUpdateOnValueChanged = false;
         DropDownBindingOption dropdownOption = DropDownBindingOption.dropdown_options;
         ImageBindingOption imageOption = ImageBindingOption.sprite;
@@ -42,9 +41,7 @@ namespace KSS.DataBind
             {
                 case Text txt:
                 case TMP_Text txtPro:
-                    txtString = EditorGUILayout.TextArea(obj.txtString, GUILayout.Height(50));
-                    EditorGUILayout.HelpBox("To insert keys in Text, wrap a key with brackets {}, i.e. {key}", MessageType.Info);
-                    break;
+                    key = EditorGUILayout.TextField("Key", obj.key); break;
                 case Image image:
                     imageOption = (ImageBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.imageOption);
                     key = EditorGUILayout.TextField("Key", obj.key);
@@ -94,7 +91,6 @@ namespace KSS.DataBind
                 obj.component = component;
                 obj.index = index;
                 obj.key = key;
-                obj.txtString = txtString;
                 obj.doUpdateOnValueChanged = doUpdateOnValueChanged;
                 obj.getChildToggle = getChildToggle;
                 obj.dropdownOption = dropdownOption;

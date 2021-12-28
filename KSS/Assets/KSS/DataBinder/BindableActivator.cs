@@ -28,9 +28,9 @@ namespace KSS.DataBind
         public bool useNameAsKey = true;
         GameObject obj => this.gameObject;
 
-        public override string[] GetKeys()
+        public override string GetKey()
         {
-            return new string[] { key };
+            return key;
         }
         public override string GetAttachedObject()
         {

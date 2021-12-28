@@ -738,10 +738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 
+  key: Name
   component: {fileID: 226347071}
-  txtString: '{Name} is Value'
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -1870,8 +1868,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Group
   component: {fileID: 475742177}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 0
   imageOption: 0
@@ -3327,8 +3323,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Texture
   component: {fileID: 870801015}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -3481,8 +3475,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Sprite
   component: {fileID: 892758562}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -4537,8 +4529,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Dropdown
   component: {fileID: 1068816781}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -4568,8 +4558,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Index
   component: {fileID: 1068816781}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 1
   imageOption: 0
@@ -4759,8 +4747,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: InputField
   component: {fileID: 1077134639}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 0
   imageOption: 0
@@ -5545,8 +5531,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Slider
   component: {fileID: 1314152531}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 0
   imageOption: 0
@@ -6155,8 +6139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Toggle
   component: {fileID: 1427516544}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 0
   imageOption: 0
@@ -6643,8 +6625,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Index
   component: {fileID: 1466035189}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 1
   imageOption: 0
@@ -6666,8 +6646,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Dropdown
   component: {fileID: 1466035189}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -7163,10 +7141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850cb27cf4a349e419cfd3e303946b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 
+  key: Name
   component: {fileID: 1553780521}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -7270,8 +7246,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: 
   component: {fileID: 1604224243}
-  txtString: '{Slider}'
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 0
@@ -7403,8 +7377,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Fill
   component: {fileID: 1608590118}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 0
   dropdownOption: 0
   imageOption: 1
@@ -9189,8 +9161,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: InputField
   component: {fileID: 1920411472}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 0
   imageOption: 0
@@ -9751,8 +9721,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Value
   component: {fileID: 1959764258}
-  txtString: 
-  txtKeys: []
   doUpdateOnValueChanged: 1
   dropdownOption: 2
   imageOption: 0
