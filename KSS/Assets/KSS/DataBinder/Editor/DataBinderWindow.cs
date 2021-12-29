@@ -8,8 +8,8 @@ namespace KSS.DataBind
 {
     public class DataBinderWindow : EditorWindow
     {
-        const float itemHeight = 20;
         Vector2 scrollPos;
+        [SerializeField] string key;
 
         private void OnEnable()
         {
@@ -19,8 +19,14 @@ namespace KSS.DataBind
         private void OnGUI()
         {
             var bindableObjs = GetBindableObjsInScene();
-            string key;
-            
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Box("Object Name", GUILayout.Width(position.width / 3));
+            GUILayout.Box("Value Type", GUILayout.Width(position.width / 3));
+            GUILayout.Box("Binded Key", GUILayout.Width(position.width / 3));
+            GUILayout.Box(" ");
+
+            EditorGUILayout.EndHorizontal();
 
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
@@ -33,16 +39,20 @@ namespace KSS.DataBind
                 var rect = EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
                 EditorGUILayout.LabelField(bindableObjs[i].GetAttachedObject().name);
                 EditorGUILayout.LabelField(bindableObjs[i].GetRequiredType().ToString());
-                key = EditorGUILayout.TextField(bindableObjs[i].Key);
+
+                key = EditorGUILayout.TextField(bindableObjs[i].Key).Trim();
                 EditorGUILayout.EndHorizontal();
 
-                if (currentEvent.type == EventType.MouseDown && rect.Contains(currentEvent.mousePosition))
-                    Selection.activeGameObject = bindableObjs[i].GetAttachedObject();
+                if ((currentEvent.type == EventType.MouseDown || currentEvent.type == EventType.Used) && rect.Contains(currentEvent.mousePosition))
+                {
+                    Selection.objects = new[] { bindableObjs[i].GetAttachedObject() };
+                }
+                Debug.Log(currentEvent.type);
 
                 if (EditorGUI.EndChangeCheck())
                 {
+                    Selection.objects = new[] { bindableObjs[i].GetAttachedObject() };
                     EditorUtility.SetDirty(bindableObjs[i].GetAttachedObject());
-                    Undo.RegisterCompleteObjectUndo(bindableObjs[i].GetAttachedObject(), nameof(BindableUI) + " undo");
                     bindableObjs[i].Key = key;
                 }
             }

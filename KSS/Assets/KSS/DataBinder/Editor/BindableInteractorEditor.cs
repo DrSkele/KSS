@@ -20,7 +20,7 @@ namespace KSS.DataBind
             serializedObject.Update();
 
             bool userNameAsKey = EditorGUILayout.Toggle(new GUIContent("UseNameAsKey", "Use attached gameobject's name as key"), interactor.useNameAsKey);
-            string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", interactor.key);
+            string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", interactor.key).Trim();
 
             EditorGUILayout.HelpBox("True : interactable \nFalse : not interactable", MessageType.Info);
 

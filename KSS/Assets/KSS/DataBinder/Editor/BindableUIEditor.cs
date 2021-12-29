@@ -69,7 +69,7 @@ namespace KSS.DataBind
                     break;
                 case Dropdown dropDown:
                     dropdownOption = (DropDownBindingOption)EditorGUILayout.EnumPopup("Binding Option", obj.dropdownOption);
-                    key = EditorGUILayout.TextField("Key", obj.key);
+                    key = EditorGUILayout.TextField("Key", obj.key).Trim();
                     doUpdateOnValueChanged = (dropdownOption == DropDownBindingOption.dropdown_options) ? false : EditorGUILayout.Toggle(new GUIContent("Update On ValueChanged", "Check if you want user input to change binded value"), obj.doUpdateOnValueChanged);
                     break;
                 case TMP_Dropdown dropdownPro:

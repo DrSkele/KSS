@@ -18,7 +18,7 @@ namespace KSS.DataBind
             serializedObject.Update();
 
             bool userNameAsKey = EditorGUILayout.Toggle(new GUIContent("UseNameAsKey", "Use attached gameobject's name as key"), activator.useNameAsKey);
-            string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", activator.key);
+            string key = userNameAsKey ? "" : EditorGUILayout.TextField("Key", activator.key).Trim();
 
             EditorGUILayout.HelpBox("True : activates \nFalse : deactivates", MessageType.Info);
 
