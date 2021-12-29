@@ -3,28 +3,55 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
-using UnityEditor.IMGUI.Controls;
 
 namespace KSS.DataBind
 {
     public class DataBinderWindow : EditorWindow
     {
-        bool initialized = false;
-        BindedTreeView view;
+        const float itemHeight = 20;
+        Vector2 scrollPos;
+
         private void OnEnable()
         {
-            view = new BindedTreeView(GetBindableObjsInScene(), new TreeViewState());
+
         }
+
         private void OnGUI()
         {
-            Rect rect = GUILayoutUtility.GetRect(0, 100000, 0, 100000);
-            view.OnGUI(rect);
-        }
-        private void Initialize()
-        {
+            var bindableObjs = GetBindableObjsInScene();
+            string key;
+            
+
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(position.width), GUILayout.Height(position.height));
+
+            EditorGUILayout.BeginVertical();
+
+            var currentEvent = Event.current;
+            for (int i = 0; i < bindableObjs.Length; i++)
+            {
+                EditorGUI.BeginChangeCheck();
+                var rect = EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
+                EditorGUILayout.LabelField(bindableObjs[i].GetAttachedObject().name);
+                EditorGUILayout.LabelField(bindableObjs[i].GetRequiredType().ToString());
+                key = EditorGUILayout.TextField(bindableObjs[i].Key);
+                EditorGUILayout.EndHorizontal();
+
+                if (currentEvent.type == EventType.MouseDown && rect.Contains(currentEvent.mousePosition))
+                    Selection.activeGameObject = bindableObjs[i].GetAttachedObject();
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    EditorUtility.SetDirty(bindableObjs[i].GetAttachedObject());
+                    Undo.RegisterCompleteObjectUndo(bindableObjs[i].GetAttachedObject(), nameof(BindableUI) + " undo");
+                    bindableObjs[i].Key = key;
+                }
+            }
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
             
         }
+
+        
         private IBindableObj[] GetBindableObjsInScene()
         {
             var bindableObjs = new List<IBindableObj>();
@@ -48,38 +75,6 @@ namespace KSS.DataBind
         public static void ShowBindedKeys()
         {
             var window = GetWindow<DataBinderWindow>("DataBinder", true);
-        }
-    }
-
-    class BindedTreeView : UnityEditor.IMGUI.Controls.TreeView
-    {
-        IBindableObj[] objs;
-        public BindedTreeView(IBindableObj[] bindableObjs, TreeViewState treeViewState) : base(treeViewState) 
-        {
-            objs = bindableObjs;
-            Reload(); 
-        }
-        protected override TreeViewItem BuildRoot()
-        {
-            int uniqueId = 0;
-
-            var root = new TreeViewItem { id = uniqueId++, depth = -1, displayName = nameof(IBindableObj) };
-
-            var bindableObj = new TreeViewItem { id = uniqueId++, depth = 0, displayName = nameof(BindableObj) };
-            var alwaysBindedObj = new TreeViewItem { id = uniqueId++, depth = 0, displayName = nameof(AlwaysBindedObj) };
-
-            root.AddChild(bindableObj);
-            root.AddChild(alwaysBindedObj);
-
-            foreach (var obj in objs)
-            {
-                if (obj is BindableObj)
-                    bindableObj.AddChild(new TreeViewItem { id = uniqueId++, depth = 1, displayName = obj.GetAttachedObject() });
-                else if (obj is AlwaysBindedObj)
-                    bindableObj.AddChild(new TreeViewItem { id = uniqueId++, depth = 1, displayName = obj.GetAttachedObject() });
-            }
-
-            return root;
         }
     }
 }

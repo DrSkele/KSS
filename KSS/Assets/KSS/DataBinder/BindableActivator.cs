@@ -28,17 +28,17 @@ namespace KSS.DataBind
         public bool useNameAsKey = true;
         GameObject obj => this.gameObject;
 
-        public override string GetKey()
+        public override string Key
         {
-            return key;
+            get => key; set => key = value;
         }
-        public override string GetAttachedObject()
+        public override GameObject GetAttachedObject()
         {
-            return this.gameObject.name;
+            return this.gameObject;
         }
-        public override string GetBindedComponent()
+        public override Component GetBindedComponent()
         {
-            return "Gameobject";
+            return this.gameObject.transform;
         }
         public override Type GetRequiredType()
         {

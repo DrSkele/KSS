@@ -148,17 +148,17 @@ namespace KSS.DataBind
         }
 
         #region IBindableObjFeature
-        public override string GetKey()
+        public override string Key
         {
-            return key;
+            get => key; set => key = value;
         }
-        public override string GetAttachedObject()
+        public override GameObject GetAttachedObject()
         {
-            return this.gameObject.name;
+            return this.gameObject;
         }
-        public override string GetBindedComponent()
+        public override Component GetBindedComponent()
         {
-            return component.name;
+            return component;
         }
         public override Type GetRequiredType()
         {

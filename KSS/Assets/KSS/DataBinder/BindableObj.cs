@@ -8,18 +8,18 @@ namespace KSS.DataBind
     public interface IBindableObj
     {
         /// <summary>
-        /// Get keys of this Obj. Usually there's only one key, but varies with implemented object.
+        /// The key of this BindableObj.
         /// </summary>
-        string GetKey();
+        string Key { get; set; }
         /// <summary>
         /// Get name of object attached to.
         /// </summary>
-        string GetAttachedObject();
+        GameObject GetAttachedObject();
         /// <summary>
         /// Get name of component binded to.
         /// </summary>
         /// <returns></returns>
-        string GetBindedComponent();
+        Component GetBindedComponent();
         /// <summary>
         /// Get type of value for the key.
         /// </summary>
@@ -37,21 +37,21 @@ namespace KSS.DataBind
     /// </summary>
     public abstract class BindableObj : MonoBehaviour, IBindableObj
     {
-        public abstract string GetKey();
-        public abstract string GetAttachedObject();
-        public abstract string GetBindedComponent();
+        public abstract string Key { get; set; }
+        public abstract GameObject GetAttachedObject();
+        public abstract Component GetBindedComponent();
         public abstract Type GetRequiredType();
         public abstract void UpdateDataBinding(DataBinder binder);
 
         private void OnEnable()
         {
-            DataBinder.Instance.AddToDataBinder(GetKey(), this);
+            DataBinder.Instance.AddToDataBinder(Key, this);
             UpdateDataBinding(DataBinder.Instance);
         }
         private void OnDisable()
         {
             if (DataBinder.IsQuit) return;
-            DataBinder.Instance?.RemoveFromDataBinder(GetKey(), this);
+            DataBinder.Instance?.RemoveFromDataBinder(Key, this);
         }
     }
     /// <summary>
@@ -61,9 +61,9 @@ namespace KSS.DataBind
     /// </summary>
     public abstract class AlwaysBindedObj : MonoBehaviour, IBindableObj
     {
-        public abstract string GetKey();
-        public abstract string GetAttachedObject();
-        public abstract string GetBindedComponent();
+        public abstract string Key { get; set; }
+        public abstract GameObject GetAttachedObject();
+        public abstract Component GetBindedComponent();
         public abstract Type GetRequiredType();
         public abstract void UpdateDataBinding(DataBinder binder);
         /// <summary>
