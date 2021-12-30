@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace KSS.DataBind
 {
     [RequireComponent(typeof(Selectable))]
-    public class BindableInteractor : BindableObj
+    public class BindableInteractor : BindableComponent
     {
         Selectable _selectable;
         Selectable selectableComponent
@@ -39,11 +39,6 @@ namespace KSS.DataBind
         }
 
         public bool useNameAsKey = true;
-
-        public override GameObject GetAttachedObject()
-        {
-            return this.gameObject;
-        }
 
         public override Component GetBindedComponent()
         {

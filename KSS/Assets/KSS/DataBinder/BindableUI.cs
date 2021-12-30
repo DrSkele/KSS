@@ -14,7 +14,7 @@ namespace KSS.DataBind
     /// DataBinding helper for <see cref="UIBehaviour"/> components.
     /// Currently supports Text, Image, Toggle, Slider, and Dropdown.
     /// </summary>
-    public class BindableUI : BindableObj
+    public class BindableUI : BindableComponent
     {
         [HideInInspector] public string key;
         /// <summary>
@@ -147,14 +147,10 @@ namespace KSS.DataBind
             }
         }
 
-        #region IBindableObjFeature
+        #region BindableObjFeature
         public override string Key
         {
             get => key; set => key = value;
-        }
-        public override GameObject GetAttachedObject()
-        {
-            return this.gameObject;
         }
         public override Component GetBindedComponent()
         {

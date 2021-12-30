@@ -56,7 +56,7 @@ namespace KSS.DataBind
     }
     /// <summary>
     /// Data Manager for DataBinding.
-    /// Must be placed higher in hierarchy than <see cref="IBindableObj"/> to work.
+    /// Must be placed higher in hierarchy than <see cref="BindableObj"/> to work.
     /// </summary>
     public class DataBinder : Singleton<DataBinder>
     {
@@ -64,7 +64,7 @@ namespace KSS.DataBind
         /// Dictionary for databinding.
         /// </summary>
         private Dictionary<string, BindedValue> bindedDatas = new Dictionary<string, BindedValue>();
-        private Dictionary<string, List<IBindableObj>> bindables = new Dictionary<string, List<IBindableObj>>();
+        private Dictionary<string, List<BindableObj>> bindables = new Dictionary<string, List<BindableObj>>();
         public static List<AlwaysBindedObj> alwaysBinded = new List<AlwaysBindedObj>();
 
         private Queue<string> toBeUpdated = new Queue<string>();
@@ -102,10 +102,10 @@ namespace KSS.DataBind
         /// <summary>
         /// Register object to the databinder, so it can be updated when binded value changes.
         /// </summary>
-        public void AddToDataBinder(string key, IBindableObj obj)
+        public void AddToDataBinder(string key, BindableObj obj)
         {
             if (bindables.ContainsKey(key) == false)
-                bindables.Add(key, new List<IBindableObj>());
+                bindables.Add(key, new List<BindableObj>());
             bindables[key].Add(obj);
         }
         /// <summary>
@@ -118,7 +118,7 @@ namespace KSS.DataBind
         /// <summary>
         /// Removes object from the databinder, so it won't be updated anymore.
         /// </summary>
-        public void RemoveFromDataBinder(string key, IBindableObj obj, bool removeAllData = false)
+        public void RemoveFromDataBinder(string key, BindableObj obj, bool removeAllData = false)
         {
             if (bindables.ContainsKey(key))
                 bindables[key].Remove(obj);
@@ -170,7 +170,7 @@ namespace KSS.DataBind
             bindedDatas.Remove(key);
         }
         /// <summary>
-        /// Updates binded value of <see cref="IBindableObj"/> in child.
+        /// Updates binded value of <see cref="BindableObj"/> in child.
         /// </summary>
         private void UpdateBindedValue(string key)
         {

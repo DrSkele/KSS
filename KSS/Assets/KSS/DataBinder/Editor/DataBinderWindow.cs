@@ -20,51 +20,60 @@ namespace KSS.DataBind
         {
             var bindableObjs = GetBindableObjsInScene();
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Box("Object Name", GUILayout.Width(position.width / 3));
-            GUILayout.Box("Value Type", GUILayout.Width(position.width / 3));
-            GUILayout.Box("Binded Key", GUILayout.Width(position.width / 3));
-            GUILayout.Box(" ");
-
-            EditorGUILayout.EndHorizontal();
-
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(position.width), GUILayout.Height(position.height));
-
-            EditorGUILayout.BeginVertical();
-
-            var currentEvent = Event.current;
-            for (int i = 0; i < bindableObjs.Length; i++)
+            Rect topTitle;
+            using (var horizontal = new EditorGUILayout.HorizontalScope())
             {
-                EditorGUI.BeginChangeCheck();
-                var rect = EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
-                EditorGUILayout.LabelField(bindableObjs[i].GetAttachedObject().name);
-                EditorGUILayout.LabelField(bindableObjs[i].GetRequiredType().ToString());
-
-                key = EditorGUILayout.TextField(bindableObjs[i].Key).Trim();
-                EditorGUILayout.EndHorizontal();
-
-                if ((currentEvent.type == EventType.MouseDown || currentEvent.type == EventType.Used) && rect.Contains(currentEvent.mousePosition))
+                topTitle = horizontal.rect;
+                GUILayout.Box("Object", GUILayout.ExpandWidth(true));
+                GUILayout.Box("Value Type", GUILayout.ExpandWidth(true));
+                GUILayout.Box("Binded Key", GUILayout.ExpandWidth(true));
+                GUILayout.Space(10);
+            }
+            using (var vertical = new EditorGUILayout.VerticalScope())
+            {
+                using (var scrollView = new EditorGUILayout.ScrollViewScope(scrollPos, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
                 {
-                    Selection.objects = new[] { bindableObjs[i].GetAttachedObject() };
-                }
-                Debug.Log(currentEvent.type);
+                    scrollPos = scrollView.scrollPosition;
 
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Selection.objects = new[] { bindableObjs[i].GetAttachedObject() };
-                    EditorUtility.SetDirty(bindableObjs[i].GetAttachedObject());
-                    bindableObjs[i].Key = key;
+                    for (int i = 0; i < bindableObjs.Length; i++)
+                    {
+                        using (var horizontal = new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+                        {
+                            string objectFieldName = "object_" + i;
+                            using (new EditorGUI.DisabledScope(false))
+                            {
+                                GUI.SetNextControlName(objectFieldName);//Applies given name to Next GUI Field. In this case, ObjectField.
+                                EditorGUILayout.ObjectField("", bindableObjs[i], typeof(GameObject), true);
+                            }
+                            EditorGUILayout.LabelField(bindableObjs[i].GetRequiredType().ToString());
+                            string textFieldName = "bindedKey_" + i;
+                            using (var check = new EditorGUI.ChangeCheckScope())
+                            {
+                                GUI.SetNextControlName(textFieldName);
+                                key = EditorGUILayout.TextField(bindableObjs[i].Key).Trim();
+                                if (check.changed)
+                                {
+                                    Undo.RecordObject(bindableObjs[i], nameof(BindableObj));
+                                    bindableObjs[i].Key = key;
+                                }
+                            }
+                            if (((EditorGUIUtility.editingTextField && GUI.GetNameOfFocusedControl().Equals(textFieldName)) 
+                                || GUI.GetNameOfFocusedControl().Equals(objectFieldName))
+                                && Selection.activeGameObject != bindableObjs[i].gameObject )
+                            {
+                                EditorGUIUtility.PingObject(bindableObjs[i].gameObject);
+                                Selection.objects = new[] { bindableObjs[i].gameObject };
+                            }
+                        }
+                    }
                 }
             }
-            EditorGUILayout.EndScrollView();
-            EditorGUILayout.EndVertical();
-            
         }
 
-        
-        private IBindableObj[] GetBindableObjsInScene()
+
+        private BindableObj[] GetBindableObjsInScene()
         {
-            var bindableObjs = new List<IBindableObj>();
+            var bindableObjs = new List<BindableObj>();
             var rootObjs = new List<GameObject>();
             var numOfScenes = SceneManager.sceneCount;
 
@@ -76,7 +85,7 @@ namespace KSS.DataBind
 
             foreach (var root in rootObjs)
             {
-                bindableObjs.AddRange(root.GetComponentsInChildren<IBindableObj>(true));
+                bindableObjs.AddRange(root.GetComponentsInChildren<BindableObj>(true));
             }
 
             return bindableObjs.ToArray();

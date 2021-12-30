@@ -21,6 +21,8 @@ namespace KSS.DataBind
 
         BindableUI obj = null;
 
+        
+
         private void OnEnable()
         {
             obj = (BindableUI)target;
@@ -86,7 +88,6 @@ namespace KSS.DataBind
 
             if ((component != null && obj.component == null) || EditorGUI.EndChangeCheck())
             {
-                EditorUtility.SetDirty(obj);
                 Undo.RegisterCompleteObjectUndo(obj, nameof(BindableUI) + " undo");
                 obj.component = component;
                 obj.index = index;
@@ -96,6 +97,7 @@ namespace KSS.DataBind
                 obj.dropdownOption = dropdownOption;
                 obj.imageOption = imageOption;
                 obj.division = division;
+                EditorUtility.SetDirty(obj);
             }
         }
     }

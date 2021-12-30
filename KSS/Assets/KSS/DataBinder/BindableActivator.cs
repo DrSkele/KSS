@@ -32,10 +32,6 @@ namespace KSS.DataBind
         {
             get => key; set => key = value;
         }
-        public override GameObject GetAttachedObject()
-        {
-            return this.gameObject;
-        }
         public override Component GetBindedComponent()
         {
             return this.gameObject.transform;

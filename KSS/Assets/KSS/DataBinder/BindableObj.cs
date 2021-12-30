@@ -5,44 +5,33 @@ namespace KSS.DataBind
     /// <summary>
     /// Object with DataBinding
     /// </summary>
-    public interface IBindableObj
+    public abstract class BindableObj: MonoBehaviour
     {
         /// <summary>
         /// The key of this BindableObj.
         /// </summary>
-        string Key { get; set; }
+        public virtual string Key { get; set; }
         /// <summary>
-        /// Get name of object attached to.
+        /// Get component binded to.
         /// </summary>
-        GameObject GetAttachedObject();
-        /// <summary>
-        /// Get name of component binded to.
-        /// </summary>
-        /// <returns></returns>
-        Component GetBindedComponent();
+        public abstract Component GetBindedComponent();
         /// <summary>
         /// Get type of value for the key.
         /// </summary>
         /// <returns></returns>
-        Type GetRequiredType();
+        public abstract Type GetRequiredType();
         /// <summary>
         /// Update object with values in binder.
         /// </summary>
-        void UpdateDataBinding(DataBinder binder);
+        public abstract void UpdateDataBinding(DataBinder binder);
     }
     /// <summary>
     /// Basic Bindable Object.
     /// Registers itself to Databinder once it's enabled.
     /// Unregisters when disabled.
     /// </summary>
-    public abstract class BindableObj : MonoBehaviour, IBindableObj
+    public abstract class BindableComponent : BindableObj
     {
-        public abstract string Key { get; set; }
-        public abstract GameObject GetAttachedObject();
-        public abstract Component GetBindedComponent();
-        public abstract Type GetRequiredType();
-        public abstract void UpdateDataBinding(DataBinder binder);
-
         private void OnEnable()
         {
             DataBinder.Instance.AddToDataBinder(Key, this);
@@ -59,13 +48,8 @@ namespace KSS.DataBind
     /// Registered to DataBinder even if it's disabled in hierarchy.
     /// Always binded during it's lifespan.
     /// </summary>
-    public abstract class AlwaysBindedObj : MonoBehaviour, IBindableObj
+    public abstract class AlwaysBindedObj : BindableObj
     {
-        public abstract string Key { get; set; }
-        public abstract GameObject GetAttachedObject();
-        public abstract Component GetBindedComponent();
-        public abstract Type GetRequiredType();
-        public abstract void UpdateDataBinding(DataBinder binder);
         /// <summary>
         /// Registers to databinder once it's created.
         /// Binded whether it's disabled or enabled.
