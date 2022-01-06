@@ -20,10 +20,8 @@ namespace KSS.DataBind
         {
             var bindableObjs = GetBindableObjsInScene();
 
-            Rect topTitle;
             using (var horizontal = new EditorGUILayout.HorizontalScope())
             {
-                topTitle = horizontal.rect;
                 GUILayout.Box("Object", GUILayout.ExpandWidth(true));
                 GUILayout.Box("Value Type", GUILayout.ExpandWidth(true));
                 GUILayout.Box("Binded Key", GUILayout.ExpandWidth(true));
@@ -47,7 +45,7 @@ namespace KSS.DataBind
                             }
                             EditorGUILayout.LabelField(bindableObjs[i].GetRequiredType().ToString());
                             string textFieldName = "bindedKey_" + i;
-                            using (var check = new EditorGUI.ChangeCheckScope())
+                            using (var check = new EditorGUI.ChangeCheckScope())//check if the key is changed.
                             {
                                 GUI.SetNextControlName(textFieldName);
                                 key = EditorGUILayout.TextField(bindableObjs[i].Key).Trim();
@@ -59,9 +57,9 @@ namespace KSS.DataBind
                             }
                             if (((EditorGUIUtility.editingTextField && GUI.GetNameOfFocusedControl().Equals(textFieldName)) 
                                 || GUI.GetNameOfFocusedControl().Equals(objectFieldName))
-                                && Selection.activeGameObject != bindableObjs[i].gameObject )
+                                && Selection.activeGameObject != bindableObjs[i].gameObject )//check if objectfield or key textfield is selected.
                             {
-                                EditorGUIUtility.PingObject(bindableObjs[i].gameObject);
+                                EditorGUIUtility.PingObject(bindableObjs[i].gameObject);//show on hierarchy and inspector.
                                 Selection.objects = new[] { bindableObjs[i].gameObject };
                             }
                         }
