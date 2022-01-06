@@ -4,36 +4,27 @@ using UnityEngine;
 using KSS.Utility;
 using System.Xml.Linq;
 
-public class BlockList : MonoBehaviour
+public class BlockList<T>
 {
-    List<CommandBlock> blocks = new List<CommandBlock>();
+    List<CommandBlock<T>> blocks = new List<CommandBlock<T>>();
 
-    private void Start()
-    {
-        AddBlock(new ContainerBlock());
-        AddBlock(new LoopStarterBlock());
-        AddBlock(new ContainerBlock());
-        AddBlock(new LoopFinishBlock());
-        ConvertAll();
-    }
-
-    public void AddBlock(CommandBlock block)
+    public void AddBlock(CommandBlock<T> block)
     {
         blocks.Add(block);
     }
 
-    public void RemoveBlock(CommandBlock block)
+    public void RemoveBlock(CommandBlock<T> block)
     {
         blocks.Remove(block);
     }
 
-    public void MoveBlock(CommandBlock block, int destinationIndex)
+    public void MoveBlock(CommandBlock<T> block, int destinationIndex)
     {
         int originIndex = blocks.IndexOf(block);
         blocks.Swap(originIndex, destinationIndex);
     }
 
-    public void ConvertAll()
+    public XElement ConvertAll()
     {
         var root = new XElement("root");
         var parent = root;
@@ -41,21 +32,45 @@ public class BlockList : MonoBehaviour
         {
             switch (block.GetCommand())
             {
-                case CommandBlock.CommandType.AsSibling:
-                    parent.Add(block.Element());
+                case CommandBlock<T>.CommandType.AsSibling:
+                    parent.Add(block.ConvertToElement());
                     break;
-                case CommandBlock.CommandType.MakeChild:
-                    var element = block.Element();
+                case CommandBlock<T>.CommandType.MakeChild:
+                    var element = block.ConvertToElement();
                     parent.Add(element);
                     parent = element;
                     break;
-                case CommandBlock.CommandType.ToParent:
+                case CommandBlock<T>.CommandType.ToParent:
                     parent = parent.Parent;
                     break;
                 default:
                     break;
             }
         }
-        Debug.Log(root);
+        return root;
+    }
+
+    public List<CommandBlock<T>> RevertAll(XElement root)
+    {
+        var list = new List<CommandBlock<T>>();
+        var core = root;
+        while(core.HasElements)
+        {
+            Revert(list, core);
+        }
+        return list;
+    }
+
+    private static void Revert(List<CommandBlock<T>> list, XElement root)
+    {
+        list.Add(CommandBlock<T>.RevertToBlock(root.Name.LocalName, root.Value));
+        foreach (var element in root.Elements())
+        {
+            list.Add(CommandBlock<T>.RevertToBlock(element.Name.LocalName, element.Value));
+            if (element.HasElements)
+            {
+                Revert(list, element);
+            }
+        }
     }
 }

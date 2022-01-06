@@ -1,42 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 
-public abstract class CommandBlock
+public class CommandBlock<T>
 {
     public enum CommandType { AsSibling, MakeChild, ToParent }
-    public abstract CommandType GetCommand();
-    public abstract XElement Element();
-}
 
-public class ContainerBlock : CommandBlock
-{
-    public override CommandType GetCommand() => CommandType.AsSibling;
-    public override XElement Element()
+    T item;
+    CommandType type;
+    public CommandBlock(CommandType type, T item)
     {
-        return new XElement("Item", 1);
+        this.type = type;
+        this.item = item;
+    }
+    public T GetT() => item;
+    public virtual CommandType GetCommand() => type;
+    public virtual XElement ConvertToElement()
+    {
+        return new XElement(type.ToString(), JsonUtility.ToJson(item));
     }
 
-}
-
-public class LoopStarterBlock : CommandBlock
-{
-    public override CommandType GetCommand() => CommandType.MakeChild;
-
-    public override XElement Element()
+    public static CommandBlock<T> RevertToBlock(string type, string json)
     {
-        return new XElement("LoopStart", 0);
+        return new CommandBlock<T>((CommandType)Enum.Parse(typeof(CommandType), type), JsonUtility.FromJson<T>(json));
     }
-}
 
-public class LoopFinishBlock : CommandBlock
-{
-    public override CommandType GetCommand() => CommandType.ToParent;
-
-    public override XElement Element()
-    {
-        return new XElement("Item", 1);
-    }
+   
 }
 
