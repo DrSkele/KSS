@@ -18,10 +18,10 @@ public class BlockList<T>
         blocks.Remove(block);
     }
 
-    public void MoveBlock(CommandBlock<T> block, int destinationIndex)
+    public void MoveBlock(int originIndex, int destinationIndex)
     {
-        int originIndex = blocks.IndexOf(block);
         blocks.Swap(originIndex, destinationIndex);
+
     }
 
     public XElement ConvertAll()
@@ -53,11 +53,7 @@ public class BlockList<T>
     public List<CommandBlock<T>> RevertAll(XElement root)
     {
         var list = new List<CommandBlock<T>>();
-        var core = root;
-        while(core.HasElements)
-        {
-            Revert(list, core);
-        }
+        Revert(list, root);
         return list;
     }
 

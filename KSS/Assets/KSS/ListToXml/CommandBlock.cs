@@ -16,8 +16,8 @@ public class CommandBlock<T>
         this.item = item;
     }
     public T GetT() => item;
-    public virtual CommandType GetCommand() => type;
-    public virtual XElement ConvertToElement()
+    public CommandType GetCommand() => type;
+    public XElement ConvertToElement()
     {
         return new XElement(type.ToString(), JsonUtility.ToJson(item));
     }
@@ -26,7 +26,20 @@ public class CommandBlock<T>
     {
         return new CommandBlock<T>((CommandType)Enum.Parse(typeof(CommandType), type), JsonUtility.FromJson<T>(json));
     }
+}
 
-   
+public class ContainerBlock<T> : CommandBlock<T>
+{
+    public ContainerBlock(T item) : base(CommandBlock<T>.CommandType.AsSibling, item) { }
+}
+
+public class BranchOutBlock<T> : CommandBlock<T>
+{
+    public BranchOutBlock(T item) : base(CommandBlock<T>.CommandType.MakeChild, item) { }
+}
+
+public class BranchEndBlock<T> : CommandBlock<T>
+{
+    public BranchEndBlock(T item) : base(CommandBlock<T>.CommandType.ToParent, item) { }
 }
 
