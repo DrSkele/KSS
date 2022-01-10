@@ -9,6 +9,7 @@ namespace KSS
     [RequireComponent(typeof(RectTransform)), DisallowMultipleComponent]
     public class ReorderableListItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
+        [SerializeField] bool isDraggable = true;
         [SerializeField] RectTransform handle;
 
         ReorderableList __list;
@@ -22,6 +23,9 @@ namespace KSS
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (!isDraggable)
+                return;
+
             if(!_list)
             {
                 Debug.LogError("Has no ReorderableList in parent object");
@@ -44,17 +48,11 @@ namespace KSS
             if (!isValid)
                 return;
 
-            //Check if pointer is in list area
-
             if (_list.IsDragable(eventData.position))
             {
-                Vector2 vector = new Vector2();
-                if (_list.IsHorizontal)
-                    vector.x += eventData.delta.x;
-                if (_list.IsVertical)
-                    vector.y += eventData.delta.y;
-
-                _rectT.anchoredPosition += vector;
+                _rectT.anchoredPosition += (_list.IsDragConstrained) ? 
+                    new Vector2((_list.IsHorizontal) ? eventData.delta.x : 0, (_list.IsVertical) ? eventData.delta.y : 0)
+                    : eventData.delta;
             }
         }
 
