@@ -8,19 +8,25 @@ namespace KSS
     [RequireComponent(typeof(LayoutGroup)), DisallowMultipleComponent]
     public class ReorderableList : MonoBehaviour
     {
+        [SerializeField] RectTransform dragArea;
+        
         RectTransform itemHolder;
         RectTransform overlap;
 
         LayoutGroup layoutGroup;
         RectTransform dummy;
-        public bool IsVertical => layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
-        public bool IsHorizontal => layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
+        bool isVertical;
+        bool isHorizontal;
+        public bool IsVertical => isVertical;
+        public bool IsHorizontal => isHorizontal;
 
         private void Start()
         {
             itemHolder = GetComponent<RectTransform>();
             overlap = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
             layoutGroup = GetComponent<LayoutGroup>();
+            isVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
+            isHorizontal = layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
         }
         public void OverlapItem(RectTransform item)
         {
@@ -56,13 +62,16 @@ namespace KSS
             Destroy(dummy.gameObject);
             dummy = null;
         }
-        public bool ItemHolderContains(Vector2 position)
+        public bool IsDragable(Vector2 position)
         {
+            if (!dragArea)
+                return true;
+
             Vector3[] corners = new Vector3[4];
-            itemHolder.GetWorldCorners(corners);
+            dragArea.GetWorldCorners(corners);
             Vector2 holderWorldPos = corners[0];
 
-            return new Rect(holderWorldPos, itemHolder.rect.size).Contains(position);
+            return new Rect(holderWorldPos, dragArea.rect.size).Contains(position);
         }
     }
 }

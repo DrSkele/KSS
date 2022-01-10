@@ -46,7 +46,7 @@ namespace KSS
 
             //Check if pointer is in list area
 
-            if (_list.ItemHolderContains(eventData.position))
+            if (_list.IsDragable(eventData.position))
             {
                 Vector2 vector = new Vector2();
                 if (_list.IsHorizontal)
@@ -55,7 +55,6 @@ namespace KSS
                     vector.y += eventData.delta.y;
 
                 _rectT.anchoredPosition += vector;
-                Debug.Log($"{_list.IsHorizontal} { _list.IsVertical}");
             }
         }
 
