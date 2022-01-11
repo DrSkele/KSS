@@ -10,6 +10,7 @@ namespace KSS
     public class ReorderableListItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
         [SerializeField] bool isDraggable = true;
+        [SerializeField] bool isSwappable = true;
         [SerializeField] RectTransform handle;
 
         ReorderableList __list;
@@ -33,13 +34,12 @@ namespace KSS
             }
 
             isValid = CheckHandle(eventData.position);
-            if(isValid)
+            if (isValid)
             {
-                _list.OverlapItem(_rectT);
-                _canvasGroup.blocksRaycasts = false;
-
                 //Make dummy item in list
                 _list.CreateDummyItem(_rectT);
+                _list.OverlapItem(_rectT);
+                _canvasGroup.blocksRaycasts = false;
             }
         }
 
@@ -78,7 +78,8 @@ namespace KSS
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _list.SwapWithDummy(_rectT);
+            if(isSwappable)
+                _list.SwapWithDummy(_rectT);
         }
     }
 }

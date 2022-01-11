@@ -8,7 +8,7 @@ namespace KSS
     [RequireComponent(typeof(LayoutGroup)), DisallowMultipleComponent]
     public class ReorderableList : MonoBehaviour
     {
-        [Tooltip("Area which the user can move item around")]
+        [Tooltip("Area which the user can move item around\n(with scrollview, it's recommended to use ViewPort)")]
         [SerializeField] RectTransform dragArea;
         [Tooltip("Should items be dragged along the layout's axis?")]
         [SerializeField] bool isDragConstrained;
