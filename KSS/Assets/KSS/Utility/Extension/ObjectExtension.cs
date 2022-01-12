@@ -13,4 +13,13 @@ public static class ObjectExtension
         }
         return component;
     }
+
+    public static bool Contains(this RectTransform rectT, Vector2 position)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectT.GetWorldCorners(corners);
+        Vector2 holderWorldPos = corners[0];
+
+        return new Rect(holderWorldPos, rectT.rect.size).Contains(position);
+    }
 }

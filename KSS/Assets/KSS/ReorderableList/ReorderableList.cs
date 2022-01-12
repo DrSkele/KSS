@@ -1,19 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace KSS
 {
-    [RequireComponent(typeof(LayoutGroup)), DisallowMultipleComponent]
-    public class ReorderableList : MonoBehaviour
+    [RequireComponent(typeof(RectTransform)), DisallowMultipleComponent]
+    public class ReorderableList : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
     {
-        [Tooltip("Area which the user can move item around\n(with scrollview, it's recommended to use ViewPort)")]
-        [SerializeField] RectTransform dragArea;
+        [SerializeField] RectTransform itemHolder;
+        //[Tooltip("Area which the user can move item around.\n(with scrollview, it's recommended to use ViewPort)\nLeave this field empty if you want to move block freely.")]
         [Tooltip("Should items be dragged along the layout's axis?")]
         [SerializeField] bool isDragConstrained;
-        
-        RectTransform itemHolder;
+        [SerializeField] bool isDragAreaLimited;
+
+        RectTransform listArea;
         RectTransform overlap;// transform higher in hierarchy which can make item show above the list.
 
         LayoutGroup layoutGroup;
@@ -35,11 +38,19 @@ namespace KSS
 
         private void Start()
         {
-            itemHolder = GetComponent<RectTransform>();
+            if(!itemHolder)
+            {
+                Debug.LogWarning("Item holder is not assigned.", this);
+                itemHolder = GetComponent<RectTransform>();
+            }
+            listArea = GetComponent<RectTransform>();
             overlap = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
-            layoutGroup = GetComponent<LayoutGroup>();
-            isVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
-            isHorizontal = layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
+            layoutGroup = GetComponentInChildren<LayoutGroup>();
+            if (layoutGroup)
+            {
+                isVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
+                isHorizontal = layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
+            }
         }
         /// <summary>
         /// Show item above list by moving the item to higher order in hierarchy.
@@ -83,25 +94,26 @@ namespace KSS
             original.SetParent(itemHolder);
             original.SetSiblingIndex(dummySiblingIndex);
 
+            DisposeDummy();
+        }
+        public void DisposeDummy()
+        {
             Destroy(dummy.gameObject);
             dummy = null;
         }
         /// <summary>
         /// Check if mouse position is within dragable area.<br/>
-        /// If there's no <see cref="dragArea"/> assigned, it's always true.
         /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
         public bool IsDragable(Vector2 position)
         {
-            if (!dragArea)
+            if (!isDragAreaLimited)
                 return true;
 
-            Vector3[] corners = new Vector3[4];
-            dragArea.GetWorldCorners(corners);
-            Vector2 holderWorldPos = corners[0];
-
-            return new Rect(holderWorldPos, dragArea.rect.size).Contains(position);
+            return IsWithInList(position);
+        }
+        public bool IsWithInList(Vector2 position)
+        {
+            return listArea.Contains(position);
         }
     }
 }
