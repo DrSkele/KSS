@@ -15,22 +15,22 @@ namespace KSS
 
         HashSet<ReorderableList> lists = new HashSet<ReorderableList>();
 
-        ReorderableList _list;
-        RectTransform _rectT;
-        CanvasGroup _canvasGroup;
+        ReorderableList currentList;
+        RectTransform rectT;
+        CanvasGroup canvasGroup;
 
         bool isValid = false;
 
         public bool IsValid => isValid;
-        public ReorderableList List { get => _list; set => _list = value; }
+        public ReorderableList List { get => currentList; set => currentList = value; }
 
         private void Start()
         {
-            _list = GetComponentInParent<ReorderableList>();
-            _rectT = GetComponent<RectTransform>();
-            _canvasGroup = gameObject.ObtainComponent<CanvasGroup>();
-            if(_list)
-                lists.Add(_list);
+            currentList = GetComponentInParent<ReorderableList>();
+            rectT = GetComponent<RectTransform>();
+            canvasGroup = gameObject.ObtainComponent<CanvasGroup>();
+            if(currentList)
+                lists.Add(currentList);
         }
 
         #region Handler
@@ -39,7 +39,7 @@ namespace KSS
             if (!isDraggable)
                 return;
 
-            if(!_list)
+            if(!currentList)
             {
                 Debug.LogError("Has no ReorderableList in parent object");
                 return;
@@ -49,55 +49,68 @@ namespace KSS
             if (isValid)
             {
                 //Make dummy item in list
-                _list.CreateDummyItem(_rectT);
-                _list.OverlapItem(_rectT);
-                _canvasGroup.blocksRaycasts = false;
+                currentList.CreateDummyItem(rectT);
+                currentList.OverlapItem(rectT);
+                canvasGroup.blocksRaycasts = false;
             }
         }
         public void OnDrag(PointerEventData eventData)
         {
             if (!isValid)
                 return;
-            if (!_list.IsDragable(eventData.position))
+            if (!currentList.IsDragable(eventData.position))
                 return;
 
-            if(_list.IsDragConstrained)
+            if(currentList.IsDragConstrained)
             {
-                _rectT.anchoredPosition +=
-                    new Vector2((_list.IsHorizontal) ? eventData.delta.x : 0,
-                    (_list.IsVertical) ? eventData.delta.y : 0);
+                rectT.anchoredPosition +=
+                    new Vector2((currentList.IsHorizontal) ? eventData.delta.x : 0,
+                    (currentList.IsVertical) ? eventData.delta.y : 0);
             }
             else
-                _rectT.anchoredPosition += eventData.delta;
+                rectT.anchoredPosition += eventData.delta;
 
             List<RaycastResult> results = new List<RaycastResult>();
-            ReorderableList currentList = null;
+            ReorderableList newList = null;
             EventSystem.current.RaycastAll(eventData, results);
             foreach (var result in results)
             {
-                currentList = result.gameObject.GetComponent<ReorderableList>();
-                if (currentList)
+                newList = result.gameObject.GetComponent<ReorderableList>();
+                if (newList)
                     break;
             }
 
-            if (currentList && currentList != _list)
+            if (newList && newList != currentList)
             {
-                _list.DisposeDummy();
-                currentList.CreateDummyItem(_rectT);
-                _list = currentList;
+                //remove item from previous list
+                currentList.OnItemRemovedEvent.Invoke(new ReorderableListEventData
+                {
+                    item = this,
+                    list = currentList
+                });
+                currentList.DisposeDummy();
+
+                //add item to current list
+                newList.OnItemAddedEvent.Invoke(new ReorderableListEventData 
+                {
+                    item = this,
+                    list = newList
+                });
+                newList.CreateDummyItem(rectT, 0);
+                currentList = newList;
             }
         }
         public void OnEndDrag(PointerEventData eventData)
         {
             isValid = false;
-            _canvasGroup.blocksRaycasts = true;
+            canvasGroup.blocksRaycasts = true;
 
-            _list.RemoveDummyItem(_rectT);
+            currentList.RemoveDummyItem(rectT);
         }
         public void OnPointerEnter(PointerEventData eventData)
         {
             if(isSwappable)
-                _list.SwapWithDummy(_rectT);
+                currentList.SwapWithDummy(rectT);
         }
         #endregion
         protected bool CheckHandle(Vector2 position)

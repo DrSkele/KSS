@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -21,16 +22,18 @@ namespace KSS
 
         LayoutGroup layoutGroup;
         RectTransform dummy;//dummy item generated when dragging items.
-        bool isVertical;
-        bool isHorizontal;
+
+        public ReorderableListEventHandler OnItemRemovedEvent = new ReorderableListEventHandler();
+        public ReorderableListEventHandler OnItemAddedEvent = new ReorderableListEventHandler();
+
         /// <summary>
         /// Does the layout has vertical axis?
         /// </summary>
-        public bool IsVertical => isVertical;
+        public bool IsVertical { get; private set; }
         /// <summary>
         /// Does the layout has horizontal axis?
         /// </summary>
-        public bool IsHorizontal => isHorizontal;
+        public bool IsHorizontal { get; private set; }
         /// <summary>
         /// Is dragging constrained to layout's axis?
         /// </summary>
@@ -48,8 +51,8 @@ namespace KSS
             layoutGroup = GetComponentInChildren<LayoutGroup>();
             if (layoutGroup)
             {
-                isVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
-                isHorizontal = layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
+                IsVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
+                IsHorizontal = layoutGroup is HorizontalLayoutGroup || layoutGroup is GridLayoutGroup;
             }
         }
         /// <summary>
@@ -65,11 +68,15 @@ namespace KSS
         /// </summary>
         public void CreateDummyItem(RectTransform original)
         {
+            CreateDummyItem(original, original.GetSiblingIndex());
+        }
+        public void CreateDummyItem(RectTransform original, int index)
+        {
             dummy = new GameObject("Dummy").AddComponent<RectTransform>();
-            int itemSiblingIndex = original.GetSiblingIndex();
+            
             dummy.sizeDelta = original.sizeDelta;
             dummy.SetParent(itemHolder);
-            dummy.SetSiblingIndex(itemSiblingIndex);
+            dummy.SetSiblingIndex(index);
         }
         /// <summary>
         /// Swap place with dummy.
@@ -115,5 +122,12 @@ namespace KSS
         {
             return listArea.Contains(position);
         }
+    }
+
+    public class ReorderableListEventHandler : UnityEvent<ReorderableListEventData> { }
+    public struct ReorderableListEventData
+    {
+        public ReorderableListItem item;
+        public ReorderableList list;
     }
 }
