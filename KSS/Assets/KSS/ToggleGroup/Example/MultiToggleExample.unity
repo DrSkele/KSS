@@ -357,6 +357,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 232873099}
   m_CullTransparentMesh: 1
+--- !u!1 &281762691
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 281762693}
+  - component: {fileID: 281762692}
+  m_Layer: 0
+  m_Name: Example
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &281762692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281762691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab52ea4830d5f9499e612be970c78e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  multiToggle: {fileID: 1315204661}
+--- !u!4 &281762693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281762691}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 762.07135, y: 574.7581, z: -112.41371}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &346117887
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,7 +1013,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &960925385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1259,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1291721960
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,7 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3918103dd999f8e4182f3e41eaa78bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minToggleOn: 1
+  minToggleOn: 0
   maxToggleOn: 1
   toggles:
   - {fileID: 1695521086}
@@ -1550,7 +1594,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1473246120
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,11 +10,12 @@ using System.Linq;
 public class MultiToggleEvent : UnityEvent<int, bool> { }
 public class MultiToggle : MonoBehaviour
 {
-    [SerializeField] [Range(0, int.MaxValue)]int minToggleOn;
-    [SerializeField] [Range(1, int.MaxValue)]int maxToggleOn;
+    [SerializeField] [Range(0, 100)]int minToggleOn;
+    [SerializeField] [Range(1, 100)]int maxToggleOn;
     [SerializeField] List<Toggle> toggles = new List<Toggle>();
 
-    Queue<Toggle> activeToggles = new Queue<Toggle>();
+    QueueableList<Toggle> activeToggles = new QueueableList<Toggle>();
+    Toggle invalidToggle;
 
     public MultiToggleEvent OnValueChanged = new MultiToggleEvent();
     public List<Toggle> AllToggles => toggles;
@@ -34,7 +35,13 @@ public class MultiToggle : MonoBehaviour
         if (toggles.Count == 0)
             toggles.AddRange(GetComponentsInChildren<Toggle>());
 
-        if(ActiveCount < minToggleOn)
+        foreach (var toggle in toggles)
+        {
+            if (toggle.isOn)
+                activeToggles.Enqueue(toggle);
+        }
+
+        if (ActiveCount < minToggleOn)
         {
             for (int i = 0; i < toggles.Count; i++)
             {
@@ -50,47 +57,59 @@ public class MultiToggle : MonoBehaviour
         }
         if(maxToggleOn < ActiveCount)
         {
-            for (int i = 0; i < toggles.Count; i++)
+            for (int i = toggles.Count - 1; 0 <= i; i--)
             {
                 if (!toggles[i].isOn)
                     continue;
 
                 toggles[i].isOn = false;
+                activeToggles.Remove(toggles[i]);
 
                 if (ActiveCount == maxToggleOn)
                     break;
             }
         }
+        
     }
     private void ManipulateToggle(int index, bool isOn)
     {
+        if (invalidToggle == toggles[index])
+        {
+            invalidToggle = null;
+            return;
+        }
+
         if(isOn)
         {
-            if(maxToggleOn == minToggleOn && ActiveCount > 0)
+            if(maxToggleOn == minToggleOn)
             {
                 activeToggles.Enqueue(toggles[index]);
                 OnValueChanged.Invoke(index, isOn);
-                activeToggles.Dequeue().isOn = false;
+                invalidToggle = activeToggles.Dequeue();
+                invalidToggle.isOn = false;
             }
-            if(ActiveCount <= maxToggleOn)
+            else if(ActiveCount < maxToggleOn)
             {
                 activeToggles.Enqueue(toggles[index]);
                 OnValueChanged.Invoke(index, isOn);
             }
             else
             {
-                toggles[index].isOn = false;
+                invalidToggle = toggles[index];
+                invalidToggle.isOn = false;
             }
         }
         else
         {
-            if(minToggleOn <= ActiveCount)
+            if (minToggleOn < ActiveCount)
             {
+                activeToggles.Remove(toggles[index]);
                 OnValueChanged.Invoke(index, isOn);
             }
             else
             {
-                toggles[index].isOn = true;
+                invalidToggle = toggles[index];
+                invalidToggle.isOn = true;
             }
         }
     }
