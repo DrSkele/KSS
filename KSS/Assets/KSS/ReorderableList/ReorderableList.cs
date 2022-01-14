@@ -9,18 +9,23 @@ using UnityEngine.UI;
 namespace KSS
 {
     [RequireComponent(typeof(RectTransform)), DisallowMultipleComponent]
-    public class ReorderableList : MonoBehaviour//, IPointerEnterHandler, IPointerExitHandler
+    public class ReorderableList : MonoBehaviour
     {
         [SerializeField] RectTransform itemHolder;
         //[Tooltip("Area which the user can move item around.\n(with scrollview, it's recommended to use ViewPort)\nLeave this field empty if you want to move block freely.")]
         [Tooltip("Should items be dragged along the layout's axis?")]
         [SerializeField] bool isDragConstrained;
         [SerializeField] bool isDragAreaLimited;
+        [SerializeField] bool scrollOnDrag;
+        [SerializeField] Vector2 dragArea;
+        [SerializeField] float dragSpeed;
 
         RectTransform listArea;
         RectTransform overlap;// transform higher in hierarchy which can make item show above the list.
 
         LayoutGroup layoutGroup;
+        ScrollRect scroll;
+
         RectTransform dummy;//dummy item generated when dragging items.
 
         public ReorderableListEventHandler OnItemRemovedEvent = new ReorderableListEventHandler();
@@ -41,7 +46,7 @@ namespace KSS
 
         private void Start()
         {
-            if(!itemHolder)
+            if (!itemHolder)
             {
                 Debug.LogWarning("Item holder is not assigned.", this);
                 itemHolder = GetComponent<RectTransform>();
@@ -49,6 +54,7 @@ namespace KSS
             listArea = GetComponent<RectTransform>();
             overlap = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
             layoutGroup = GetComponentInChildren<LayoutGroup>();
+            scroll = GetComponentInChildren<ScrollRect>();
             if (layoutGroup)
             {
                 IsVertical = layoutGroup is VerticalLayoutGroup || layoutGroup is GridLayoutGroup;
@@ -73,7 +79,7 @@ namespace KSS
         public void CreateDummyItem(RectTransform original, int index)
         {
             dummy = new GameObject("Dummy").AddComponent<RectTransform>();
-            
+
             dummy.sizeDelta = original.sizeDelta;
             dummy.SetParent(itemHolder);
             dummy.SetSiblingIndex(index);
@@ -122,9 +128,70 @@ namespace KSS
         {
             return listArea.Contains(position);
         }
+        Coroutine coroutine;
+        public void StartScrollOnDrag()
+        {
+            if (!scrollOnDrag)
+                return;
+            if (coroutine != null)
+                return;
+            coroutine = StartCoroutine(CO_ScrollOnDrag());
+        }
+        private IEnumerator CO_ScrollOnDrag()
+        {
+            while(Input.GetKey(KeyCode.Mouse0) || Input.touchCount > 0)
+            {
+                Vector2 position = Input.mousePosition;
+
+                if(IsWithInList(position))
+                    ScrollOnDrag(position);
+
+                yield return new WaitForEndOfFrame();
+            }
+            coroutine = null;
+        }
+        private void ScrollOnDrag(Vector2 position)
+        {
+            if (!scroll)
+                return;
+
+            Vector3[] corners = new Vector3[4];
+            listArea.GetWorldCorners(corners);
+            float upperBound = corners[2].y;
+            float lowerBound = corners[0].y;
+            float rightBound = corners[2].x;
+            float leftBound = corners[0].x;
+
+            if (IsVertical)
+            {
+                //upper
+                if (upperBound - dragArea.y < position.y && position.y < upperBound)
+                {
+                    scroll.verticalNormalizedPosition += (dragSpeed * Time.deltaTime);
+                }
+                //lower
+                else if(lowerBound < position.y && position.y < lowerBound + dragArea.y)
+                {
+                    scroll.verticalNormalizedPosition -= (dragSpeed * Time.deltaTime);
+                }
+            }
+            if(IsHorizontal)
+            {
+                //right
+                if (rightBound < position.x && position.x < rightBound + dragArea.x)
+                {
+                    scroll.horizontalNormalizedPosition += (dragSpeed * Time.deltaTime);
+                }
+                //left
+                else if (leftBound - dragArea.x < position.x && position.x < leftBound)
+                {
+                    scroll.horizontalNormalizedPosition -= (dragSpeed * Time.deltaTime);
+                }
+            }
+        }
     }
 
-    public class ReorderableListEventHandler : UnityEvent<ReorderableListEventData> { }
+        public class ReorderableListEventHandler : UnityEvent<ReorderableListEventData> { }
     public struct ReorderableListEventData
     {
         public ReorderableListItem item;

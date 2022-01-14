@@ -51,6 +51,7 @@ namespace KSS
                 //Make dummy item in list
                 currentList.CreateDummyItem(rectT);
                 currentList.OverlapItem(rectT);
+                currentList.StartScrollOnDrag();
                 canvasGroup.blocksRaycasts = false;
             }
         }
@@ -97,6 +98,7 @@ namespace KSS
                     list = newList
                 });
                 newList.CreateDummyItem(rectT, 0);
+                newList.StartScrollOnDrag();
                 currentList = newList;
             }
         }
