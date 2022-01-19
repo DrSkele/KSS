@@ -50,6 +50,12 @@ namespace KSS
             {
                 //Make dummy item in list
                 currentList.CreateDummyItem(rectT);
+                currentList.OnItemBeginDragEvent.Invoke(new ReorderableListEventData
+                {
+                    item = this,
+                    list = currentList,
+                    index = rectT.GetSiblingIndex()
+                });
                 currentList.OverlapItem(rectT);
                 currentList.StartScrollOnDrag();
                 canvasGroup.blocksRaycasts = false;
@@ -84,7 +90,7 @@ namespace KSS
             if (newList && newList != currentList)
             {
                 //remove item from previous list
-                currentList.OnItemRemovedEvent.Invoke(new ReorderableListEventData
+                currentList.OnItemExitEvent.Invoke(new ReorderableListEventData
                 {
                     item = this,
                     list = currentList
@@ -92,7 +98,7 @@ namespace KSS
                 currentList.DisposeDummy();
 
                 //add item to current list
-                newList.OnItemAddedEvent.Invoke(new ReorderableListEventData 
+                newList.OnItemEnterEvent.Invoke(new ReorderableListEventData 
                 {
                     item = this,
                     list = newList
@@ -108,6 +114,12 @@ namespace KSS
             canvasGroup.blocksRaycasts = true;
 
             currentList.RemoveDummyItem(rectT);
+            currentList.OnItemDropEvent.Invoke(new ReorderableListEventData
+            {
+                item = this,
+                list = currentList,
+                index = rectT.GetSiblingIndex()
+            });
         }
         public void OnPointerEnter(PointerEventData eventData)
         {

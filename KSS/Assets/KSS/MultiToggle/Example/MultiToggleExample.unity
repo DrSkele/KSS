@@ -1426,7 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3918103dd999f8e4182f3e41eaa78bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minToggleOn: 0
+  minToggleOn: 1
   maxToggleOn: 1
   toggles:
   - {fileID: 1695521086}

@@ -12,8 +12,8 @@ public class ReorderableListExample : MonoBehaviour
     {
         rectT = GetComponent<RectTransform>();
         list = GetComponentInChildren<ReorderableList>();
-        list.OnItemAddedEvent.AddListener(ExpandRect);
-        list.OnItemRemovedEvent.AddListener(ReduceRect);
+        list.OnItemEnterEvent.AddListener(ExpandRect);
+        list.OnItemExitEvent.AddListener(ReduceRect);
     }
 
     private void ExpandRect(ReorderableListEventData data)

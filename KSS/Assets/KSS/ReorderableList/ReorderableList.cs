@@ -28,8 +28,10 @@ namespace KSS
 
         RectTransform dummy;//dummy item generated when dragging items.
 
-        public ReorderableListEventHandler OnItemRemovedEvent = new ReorderableListEventHandler();
-        public ReorderableListEventHandler OnItemAddedEvent = new ReorderableListEventHandler();
+        public ReorderableListEventHandler OnItemExitEvent = new ReorderableListEventHandler();
+        public ReorderableListEventHandler OnItemEnterEvent = new ReorderableListEventHandler();
+        public ReorderableListEventHandler OnItemBeginDragEvent = new ReorderableListEventHandler();
+        public ReorderableListEventHandler OnItemDropEvent = new ReorderableListEventHandler();
 
         /// <summary>
         /// Does the layout has vertical axis?
@@ -165,12 +167,12 @@ namespace KSS
             if (IsVertical)
             {
                 //upper
-                if (upperBound - dragArea.y < position.y && position.y < upperBound)
+                if (upperBound - dragArea.y < position.y && position.y < upperBound && scroll.verticalNormalizedPosition < 1)
                 {
                     scroll.verticalNormalizedPosition += (dragSpeed * Time.deltaTime);
                 }
                 //lower
-                else if(lowerBound < position.y && position.y < lowerBound + dragArea.y)
+                else if(lowerBound < position.y && position.y < lowerBound + dragArea.y && 0 < scroll.verticalNormalizedPosition)
                 {
                     scroll.verticalNormalizedPosition -= (dragSpeed * Time.deltaTime);
                 }
@@ -178,12 +180,12 @@ namespace KSS
             if(IsHorizontal)
             {
                 //right
-                if (rightBound < position.x && position.x < rightBound + dragArea.x)
+                if (rightBound - dragArea.x < position.x && position.x < rightBound && scroll.horizontalNormalizedPosition < 1)
                 {
                     scroll.horizontalNormalizedPosition += (dragSpeed * Time.deltaTime);
                 }
                 //left
-                else if (leftBound - dragArea.x < position.x && position.x < leftBound)
+                else if (leftBound < position.x && position.x < leftBound + dragArea.x && 0 < scroll.horizontalNormalizedPosition)
                 {
                     scroll.horizontalNormalizedPosition -= (dragSpeed * Time.deltaTime);
                 }
@@ -191,10 +193,11 @@ namespace KSS
         }
     }
 
-        public class ReorderableListEventHandler : UnityEvent<ReorderableListEventData> { }
+    public class ReorderableListEventHandler : UnityEvent<ReorderableListEventData> { }
     public struct ReorderableListEventData
     {
         public ReorderableListItem item;
         public ReorderableList list;
+        public int index;
     }
 }
