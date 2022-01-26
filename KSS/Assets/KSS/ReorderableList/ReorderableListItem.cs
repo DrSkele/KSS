@@ -45,6 +45,9 @@ namespace KSS
                 return;
             }
 
+            //pass drag event to scroll
+            ExecuteEvents.Execute(currentList.gameObject, eventData, ExecuteEvents.beginDragHandler);
+
             isValid = CheckHandle(eventData.position);
             if (isValid)
             {
@@ -63,12 +66,15 @@ namespace KSS
         }
         public void OnDrag(PointerEventData eventData)
         {
-            if (!isValid)
-                return;
-            if (!currentList.IsDragable(eventData.position))
-                return;
+            if (!currentList.IsDragable(eventData.position) || !isValid)
+            {
+                //pass drag event to scroll
+                ExecuteEvents.Execute(currentList.gameObject, eventData, ExecuteEvents.dragHandler);
 
-            if(currentList.IsDragConstrained)
+                return;
+            }
+
+            if (currentList.IsDragConstrained)
             {
                 rectT.anchoredPosition +=
                     new Vector2((currentList.IsHorizontal) ? eventData.delta.x : 0,
@@ -110,6 +116,14 @@ namespace KSS
         }
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (!currentList)
+            {
+                Debug.LogError("Has no ReorderableList in parent object");
+                return;
+            }
+            //pass drag event to scroll
+            ExecuteEvents.Execute(currentList.gameObject, eventData, ExecuteEvents.endDragHandler);
+
             isValid = false;
             canvasGroup.blocksRaycasts = true;
 

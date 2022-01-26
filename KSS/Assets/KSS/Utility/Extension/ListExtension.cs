@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace KSS.Utility
@@ -20,6 +18,23 @@ namespace KSS.Utility
             }
 
             (list[from], list[to]) = (list[to], list[from]);
+        }
+
+        public static List<T> Shuffle<T>(this List<T> list, int seed = 0)
+        {
+            var randomSeed = seed == 0 ? new Random() : new Random(seed);
+            int length = list.Count;
+            int randomPick = 0;
+
+            for (int i = 0; i < length; i++)
+            {
+                randomPick = randomSeed.Next(i, length);
+                //var temp = list[i];
+                //list[i] = list[randomPick];
+                //list[randomPick] = temp;
+                (list[i], list[randomPick]) = (list[randomPick], list[i]);
+            }
+            return list;
         }
     }
 }
