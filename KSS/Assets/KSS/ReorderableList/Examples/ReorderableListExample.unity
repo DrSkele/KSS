@@ -2452,9 +2452,8 @@ GameObject:
   m_Component:
   - component: {fileID: 428191828}
   - component: {fileID: 428191832}
-  - component: {fileID: 428191833}
-  - component: {fileID: 428191831}
   - component: {fileID: 428191830}
+  - component: {fileID: 428191831}
   - component: {fileID: 428191829}
   m_Layer: 5
   m_Name: Image (9)
@@ -2482,7 +2481,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 641.0394}
+  m_SizeDelta: {x: 0, y: 640}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &428191829
 CanvasGroup:
@@ -2505,12 +2504,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 428191827}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 802929a792393ae4d8a713e1674161f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d82a2c50e8da0b468916008dcb6f029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isDraggable: 1
   isSwappable: 1
-  handle: {fileID: 2142394979}
+  handle: {fileID: 0}
+  minimizeOnDrag: 1
+  minimizedSize: {x: 0, y: 100}
 --- !u!114 &428191831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2549,18 +2550,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428191827}
   m_CullTransparentMesh: 1
---- !u!114 &428191833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 428191827}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a2f3e6e165a2c549b56be967bab8679, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &430250690
 GameObject:
   m_ObjectHideFlags: 0
@@ -2856,7 +2845,6 @@ GameObject:
   m_Component:
   - component: {fileID: 500104979}
   - component: {fileID: 500104983}
-  - component: {fileID: 500104982}
   - component: {fileID: 500104981}
   - component: {fileID: 500104980}
   m_Layer: 5
@@ -2929,24 +2917,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &500104982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500104978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b9bb6dadc707144e8d78e8f95f8b784, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemHolder: {fileID: 1807784556}
-  isDragConstrained: 0
-  isDragAreaLimited: 0
-  scrollOnDrag: 0
-  dragArea: {x: 0, y: 0}
-  dragSpeed: 0
 --- !u!222 &500104983
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3221,6 +3191,7 @@ GameObject:
   - component: {fileID: 537848199}
   - component: {fileID: 537848202}
   - component: {fileID: 537848201}
+  - component: {fileID: 537848204}
   - component: {fileID: 537848200}
   - component: {fileID: 537848203}
   m_Layer: 5
@@ -3332,6 +3303,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &537848204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537848198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b9bb6dadc707144e8d78e8f95f8b784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemHolder: {fileID: 1807784556}
+  isDragConstrained: 0
+  isDragAreaLimited: 0
+  scrollOnDrag: 0
+  dragArea: {x: 0, y: 0}
+  dragSpeed: 0
 --- !u!1 &610258055
 GameObject:
   m_ObjectHideFlags: 0
@@ -4518,7 +4507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1186589074}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -4586,8 +4575,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemHolder: {fileID: 1186589074}
-  isDragConstrained: 0
-  isDragAreaLimited: 0
+  isDragConstrained: 1
+  isDragAreaLimited: 1
   scrollOnDrag: 1
   dragArea: {x: 100, y: 100}
   dragSpeed: 10
@@ -4959,7 +4948,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1610253138}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.72530437
+  m_Size: 0.7257669
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7665,7 +7654,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000016923226}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 583}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1458650344
@@ -9888,7 +9877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 1458650343}
   m_Horizontal: 1
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -10852,7 +10841,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 62413617}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.97044337
+  m_Size: 0.9685185
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

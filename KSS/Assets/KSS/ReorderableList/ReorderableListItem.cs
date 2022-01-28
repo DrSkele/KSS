@@ -9,22 +9,22 @@ namespace KSS
     [RequireComponent(typeof(RectTransform)),RequireComponent(typeof(CanvasGroup)), DisallowMultipleComponent]
     public class ReorderableListItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
-        [SerializeField] bool isDraggable = true;
-        [SerializeField] bool isSwappable = true;
-        [SerializeField] RectTransform handle;
+        [SerializeField] protected bool isDraggable = true;
+        [SerializeField] protected bool isSwappable = true;
+        [SerializeField] protected RectTransform handle;
 
+        //Initialized On Start
+        protected ReorderableList currentList;
+        protected RectTransform rectT;
+        protected CanvasGroup canvasGroup;
+
+        //Used in runtime
+        protected bool isValid = false;
         HashSet<ReorderableList> lists = new HashSet<ReorderableList>();
 
-        ReorderableList currentList;
-        RectTransform rectT;
-        CanvasGroup canvasGroup;
-
-        bool isValid = false;
-
-        public bool IsValid => isValid;
         public ReorderableList List { get => currentList; set => currentList = value; }
 
-        private void Start()
+        protected virtual void Start()
         {
             currentList = GetComponentInParent<ReorderableList>();
             rectT = GetComponent<RectTransform>();
@@ -34,7 +34,7 @@ namespace KSS
         }
 
         #region Handler
-        public void OnBeginDrag(PointerEventData eventData)
+        public virtual void OnBeginDrag(PointerEventData eventData)
         {
             if (!isDraggable)
                 return;
@@ -64,7 +64,7 @@ namespace KSS
                 canvasGroup.blocksRaycasts = false;
             }
         }
-        public void OnDrag(PointerEventData eventData)
+        public virtual void OnDrag(PointerEventData eventData)
         {
             if (!currentList.IsDragable(eventData.position) || !isValid)
             {
@@ -114,7 +114,7 @@ namespace KSS
                 currentList = newList;
             }
         }
-        public void OnEndDrag(PointerEventData eventData)
+        public virtual void OnEndDrag(PointerEventData eventData)
         {
             if (!currentList)
             {
@@ -135,7 +135,7 @@ namespace KSS
                 index = rectT.GetSiblingIndex()
             });
         }
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if(isSwappable)
                 currentList.SwapWithDummy(rectT);
