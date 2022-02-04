@@ -9,28 +9,37 @@ namespace KSS
     [RequireComponent(typeof(RectTransform)),RequireComponent(typeof(CanvasGroup)), DisallowMultipleComponent]
     public class ReorderableListItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
-        [SerializeField] protected bool isDraggable = true;
-        [SerializeField] protected bool isSwappable = true;
-        [SerializeField] protected RectTransform handle;
+        [SerializeField] RectTransform handle;
+        [SerializeField] bool isDraggable = true;
+        [SerializeField] bool isSwappable = true;
+        [SerializeField] bool minimizeOnDrag = false;
+        [SerializeField] Vector2 minimizedSize;
 
         //Initialized On Start
-        protected ReorderableList currentList;
-        protected RectTransform rectT;
-        protected CanvasGroup canvasGroup;
+        ReorderableList currentList;
+        RectTransform rectT;
+        CanvasGroup canvasGroup;
+        ReorderableList childList;
 
         //Used in runtime
-        protected bool isValid = false;
+        bool isValid = false;
         HashSet<ReorderableList> lists = new HashSet<ReorderableList>();
+        Vector2 originalSize;
 
         public ReorderableList List { get => currentList; set => currentList = value; }
 
-        protected virtual void Start()
+        private void Start()
         {
             currentList = GetComponentInParent<ReorderableList>();
             rectT = GetComponent<RectTransform>();
             canvasGroup = gameObject.ObtainComponent<CanvasGroup>();
             if(currentList)
                 lists.Add(currentList);
+
+            rectT.pivot = new Vector2(0.5f, 1);
+            childList = GetComponentInChildren<ReorderableList>();
+            childList?.OnItemEnterEvent.AddListener(ExpandRect);
+            childList?.OnItemExitEvent.AddListener(ReduceRect);
         }
 
         #region Handler
@@ -51,6 +60,13 @@ namespace KSS
             isValid = CheckHandle(eventData.position);
             if (isValid)
             {
+                if (minimizeOnDrag)
+                {
+                    originalSize = rectT.sizeDelta;
+                    rectT.sizeDelta = new Vector2(minimizedSize.x == 0 ? originalSize.x : minimizedSize.x,
+                        minimizedSize.y == 0 ? originalSize.y : minimizedSize.y);
+                }
+
                 //Make dummy item in list
                 currentList.CreateDummyItem(rectT);
                 currentList.OnItemBeginDragEvent.Invoke(new ReorderableListEventData
@@ -124,16 +140,24 @@ namespace KSS
             //pass drag event to scroll
             ExecuteEvents.Execute(currentList.gameObject, eventData, ExecuteEvents.endDragHandler);
 
-            isValid = false;
-            canvasGroup.blocksRaycasts = true;
-
-            currentList.RemoveDummyItem(rectT);
-            currentList.OnItemDropEvent.Invoke(new ReorderableListEventData
+            if (isValid)
             {
-                item = this,
-                list = currentList,
-                index = rectT.GetSiblingIndex()
-            });
+                isValid = false;
+                canvasGroup.blocksRaycasts = true;
+
+                currentList.RemoveDummyItem(rectT);
+                currentList.OnItemDropEvent.Invoke(new ReorderableListEventData
+                {
+                    item = this,
+                    list = currentList,
+                    index = rectT.GetSiblingIndex()
+                });
+
+                if (minimizeOnDrag)
+                {
+                    rectT.sizeDelta = originalSize;
+                }
+            }
         }
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
@@ -141,7 +165,7 @@ namespace KSS
                 currentList.SwapWithDummy(rectT);
         }
         #endregion
-        protected bool CheckHandle(Vector2 position)
+        private bool CheckHandle(Vector2 position)
         {
             if (handle)
             {
@@ -151,6 +175,20 @@ namespace KSS
                 return new Rect(handleWorldPos, handle.rect.size).Contains(position);
             }
             return true;
+        }
+        private void ExpandRect(ReorderableListEventData data)
+        {
+            var itemSize = data.item.GetComponent<RectTransform>().sizeDelta;
+            float expandX = data.item.List.IsHorizontal ? itemSize.x : 0;
+            float expandY = data.item.List.IsVertical ? itemSize.y : 0;
+            rectT.sizeDelta = new Vector2(rectT.sizeDelta.x + expandX, rectT.sizeDelta.y + expandY);
+        }
+        private void ReduceRect(ReorderableListEventData data)
+        {
+            var itemSize = data.item.GetComponent<RectTransform>().sizeDelta;
+            float reduceX = data.item.List.IsHorizontal ? itemSize.x : 0;
+            float reduceY = data.item.List.IsVertical ? itemSize.y : 0;
+            rectT.sizeDelta = new Vector2(rectT.sizeDelta.x - reduceX, rectT.sizeDelta.y - reduceY);
         }
     }
 }
