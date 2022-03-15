@@ -11,14 +11,14 @@ namespace KSS
     [RequireComponent(typeof(RectTransform)), DisallowMultipleComponent]
     public class ReorderableList : MonoBehaviour
     {
-        [SerializeField] RectTransform itemHolder;
+        public RectTransform itemHolder;
         //[Tooltip("Area which the user can move item around.\n(with scrollview, it's recommended to use ViewPort)\nLeave this field empty if you want to move block freely.")]
         [Tooltip("Should items be dragged along the layout's axis?")]
-        [SerializeField] bool isDragConstrained;
-        [SerializeField] bool isDragAreaLimited;
-        [SerializeField] bool scrollOnDrag;
-        [SerializeField] Vector2 dragArea;
-        [SerializeField] float dragSpeed;
+        public bool isDragConstrained;
+        public bool isDragAreaLimited;
+        public bool scrollOnDrag;
+        public Vector2 dragArea;
+        public float dragSpeed;
 
         RectTransform listArea;
         RectTransform overlap;// transform higher in hierarchy which can make item show above the list.
