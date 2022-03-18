@@ -9,11 +9,11 @@ namespace KSS
     [RequireComponent(typeof(RectTransform)),RequireComponent(typeof(CanvasGroup)), DisallowMultipleComponent]
     public class ReorderableListItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
-        [SerializeField] RectTransform handle;
-        [SerializeField] bool isDraggable = true;
-        [SerializeField] bool isSwappable = true;
-        [SerializeField] bool minimizeOnDrag = false;
-        [SerializeField] Vector2 minimizedSize;
+        public RectTransform handle;
+        public bool isDraggable = true;
+        public bool isSwappable = true;
+        public bool minimizeOnDrag = false;
+        public Vector2 minimizedSize;
 
         //Initialized On Start
         ReorderableList currentList;
